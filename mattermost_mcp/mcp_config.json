@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mattermost_mcp": {
+      "command": "python",
+      "args": [
+        "-m",
+        "mattermost_mcp.mcp_server"
+      ],
+      "env": {}
+    }
+  }
+}
