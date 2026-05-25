@@ -1,21 +1,18 @@
-import warnings
-import logging
+"""CONCEPT:MM-002 Main FastMCP server and tool registration."""
 import os
 import sys
 from typing import Any
-from fastmcp import Context, FastMCP
-from fastmcp.utilities.logging import get_logger
-from pydantic import Field
-from starlette.requests import Request
-from starlette.responses import JSONResponse
 
 from agent_utilities.base_utilities import to_boolean
 from agent_utilities.mcp_utilities import create_mcp_server
 from dotenv import find_dotenv, load_dotenv
+from fastmcp.utilities.logging import get_logger
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
-from mattermost_mcp.mcp.mcp_teams import register_teams_tools
 from mattermost_mcp.mcp.mcp_channels import register_channels_tools
 from mattermost_mcp.mcp.mcp_posts import register_posts_tools
+from mattermost_mcp.mcp.mcp_teams import register_teams_tools
 from mattermost_mcp.mcp.mcp_users import register_users_tools
 
 __version__ = "0.15.0"
@@ -33,19 +30,18 @@ def get_mcp_instance() -> tuple[Any, ...]:
     async def health_check(request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
 
-    
     DEFAULT_TEAMSTOOL = to_boolean(os.getenv("TEAMSTOOL", "True"))
     if DEFAULT_TEAMSTOOL:
         register_teams_tools(mcp)
-    
+
     DEFAULT_CHANNELSTOOL = to_boolean(os.getenv("CHANNELSTOOL", "True"))
     if DEFAULT_CHANNELSTOOL:
         register_channels_tools(mcp)
-    
+
     DEFAULT_POSTSTOOL = to_boolean(os.getenv("POSTSTOOL", "True"))
     if DEFAULT_POSTSTOOL:
         register_posts_tools(mcp)
-    
+
     DEFAULT_USERSTOOL = to_boolean(os.getenv("USERSTOOL", "True"))
     if DEFAULT_USERSTOOL:
         register_users_tools(mcp)

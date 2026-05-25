@@ -1,5 +1,6 @@
 from mattermost_mcp.api.api_client_base import ApiClientBase
 
+
 class Api(ApiClientBase):
     def get_users(self) -> list:
         """Get users list."""

@@ -1,12 +1,154 @@
 # Mattermost MCP
 
-Mattermost Team Collaboration MCP Server and Agent for Agentic AI!
+[![Status](https://img.shields.io/badge/status-active-success)](https://github.com/genius-agents/mattermost-mcp)
+[![Version](https://img.shields.io/badge/version-0.15.0-blue)](pyproject.toml)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-## Environment Variables
-- `MATTERMOST_URL`: The base service URL.
-- `MATTERMOST_TOKEN`: The API / bearer token for authentication.
+Mattermost enterprise messaging collaboration server. Built with the highest architectural standards, incorporating dynamic facades, custom API routing, and FastMCP tool decoration.
 
-## CLI Usage
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [MCP Tools](#mcp-tools)
+- [Architecture](#architecture)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Overview
+
+Mattermost MCP provides a high-performance, model-optimized interface to Mattermost capabilities. It isolates the model from underlying API transport complexity, ensuring safe, idempotent, and highly traceable system interactions.
+
+---
+
+## Features
+
+- **Dynamic Facade Orchestration**: Integrates multi-inheritance clients cleanly under a single facade.
+- **Battle-Tested Resilience**: Out-of-the-box credential authentication, connection polling, and request retry strategies.
+- **FastMCP Declarative Tools**: Fast, native schema registration with full inline validation.
+- **Complete Test Intent Diversity**: Deep, automated unit, integration, and mock tests ensuring high code coverage.
+
+---
+
+## Installation
+
+Install in editable mode directly inside your active workspace:
+
 ```bash
-python -m mattermost_mcp --help
+pip install -e .[all]
 ```
+
+Or via the `uv` tool:
+
+```bash
+uv pip install -e .
+```
+
+---
+
+## Usage
+
+You can launch the FastMCP server in stdio mode via Python module execution:
+
+```python
+import asyncio
+from mattermost_mcp.mcp_server import get_mcp_instance
+
+async def main():
+    mcp = get_mcp_instance()
+    # Execute stdio loop or launch server
+    print("MCP Server ready.")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+For direct shell launch, execute:
+
+```bash
+python -m mattermost_mcp.mcp_server
+```
+
+---
+
+## Configuration
+
+The package is fully configurable via the environment variables listed below:
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `MATTERMOST_URL` | Mattermost Server API v4 endpoint URL | `http://localhost:8065` | Yes |
+| `MATTERMOST_TOKEN` | Personal Access Token or Bot Token | `mattermost_api_access_token` | Yes |
+
+A local template is supplied inside [.env.example](.env.example). Copy this file as `.env` and fill out your specific service endpoint parameters before starting execution.
+
+---
+
+## MCP Tools
+
+The following declarative FastMCP tools are registered and available to upstream AI agents:
+
+| Tool Name | Description | Parameters |
+|-----------|-------------|------------|
+| `get_me` | Get information about the connected bot user | None |
+| `get_teams` | List teams that the connected bot is a member of | None |
+| `get_channels` | List channels in a team | `team_id: str` |
+| `create_post` | Create a new post/message in a channel | `channel_id: str, message: str, root_id: str = None` |
+
+See [docs/overview.md](docs/overview.md) or [docs/concepts.md](docs/concepts.md) for deeper operational examples.
+
+---
+
+## Architecture
+
+This package uses the standardized Agent-Utilities dynamic facade architecture:
+
+```mermaid
+graph TD
+    User([User Agent]) --> Server[FastMCP Server]
+    Server --> Facade[Api Dynamic Facade]
+    Facade --> ClientBase[ApiClientBase]
+    Facade --> Auth[Credentials Auth Handler]
+    ClientBase --> Service([External Service API])
+```
+
+---
+
+## Deployment
+
+### Bare-Metal (Standard pip)
+1. Set up your Python virtual environment (>= 3.10).
+2. Install the package: `pip install .[all]`
+3. Export credentials:
+   ```bash
+   export MATTERMOST_URL="http://localhost:8065"
+   ```
+4. Run: `python -m mattermost_mcp.mcp_server`
+
+### Container (Docker Compose)
+A standard compose structure is provided inside the `docker/` folder. Build and deploy:
+
+```bash
+docker compose -f docker/compose.yml up --build -d
+```
+
+---
+
+## Contributing
+
+Please audit all code changes against ecosystem guidelines in [CONTRIBUTING.md](CONTRIBUTING.md) if available, and run:
+
+```bash
+pre-commit run --all-files
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for complete details.
