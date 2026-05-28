@@ -1,6 +1,7 @@
 """
 This file was automatically generated. Do not edit manually.
 """
+
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -48,4 +49,6 @@ def register_status_tools(mcp: FastMCP):
                 return {"status": "success"}
             return res
         except Exception as e:
-            return {"error": "Failed to execute operation " + str(action) + ": " + str(e)}
+            return {
+                "error": "Failed to execute operation " + str(action) + ": " + str(e)
+            }

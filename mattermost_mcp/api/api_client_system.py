@@ -1,14 +1,16 @@
 """
 This file was automatically generated. Do not edit manually.
 """
+
 from typing import Any
+
 from mattermost_mcp.api.api_client_base import ApiClientBase
 
 
 class Api(ApiClientBase):
     def get_supported_timezone(self, **kwargs) -> Any:
         """Retrieve a list of supported timezones
-        
+
         Path: /api/v4/system/timezones
         Method: GET
         """
@@ -17,7 +19,7 @@ class Api(ApiClientBase):
 
     def get_ping(self, **kwargs) -> Any:
         """Check system health
-        
+
         Path: /api/v4/system/ping
         Method: GET
         """
@@ -26,7 +28,7 @@ class Api(ApiClientBase):
 
     def connect_web_socket(self, **kwargs) -> Any:
         """Open a WebSocket connection
-        
+
         Path: /api/v4/websocket
         Method: GET
         """
@@ -35,7 +37,7 @@ class Api(ApiClientBase):
 
     def manual_test(self, **kwargs) -> Any:
         """Run manual testing helpers
-        
+
         Path: /manualtest
         Method: GET
         """
@@ -44,16 +46,16 @@ class Api(ApiClientBase):
 
     def get_notices(self, team_id: str, **kwargs) -> Any:
         """Get notices for logged in user in specified team
-        
+
         Path: /api/v4/system/notices/{team_id}
         Method: GET
         """
-        url = "/api/v4/system/notices/{team_id}".format(team_id=team_id)
+        url = f"/api/v4/system/notices/{team_id}"
         return self.request("GET", url, params=kwargs)
 
     def mark_notices_viewed(self, **kwargs) -> Any:
         """Update notices as 'viewed'
-        
+
         Path: /api/v4/system/notices/view
         Method: PUT
         """
@@ -62,7 +64,7 @@ class Api(ApiClientBase):
 
     def get_onboarding_complete(self, **kwargs) -> Any:
         """Get first admin onboarding completion status
-        
+
         Path: /api/v4/system/onboarding/complete
         Method: GET
         """
@@ -71,7 +73,7 @@ class Api(ApiClientBase):
 
     def complete_onboarding(self, **kwargs) -> Any:
         """Complete first admin onboarding
-        
+
         Path: /api/v4/system/onboarding/complete
         Method: POST
         """
@@ -80,7 +82,7 @@ class Api(ApiClientBase):
 
     def get_a_i_bridge_test_helper(self, **kwargs) -> Any:
         """Get AI bridge E2E test helper state
-        
+
         Path: /api/v4/system/e2e/ai_bridge
         Method: GET
         """
@@ -89,7 +91,7 @@ class Api(ApiClientBase):
 
     def set_a_i_bridge_test_helper(self, **kwargs) -> Any:
         """Configure AI bridge E2E test helper
-        
+
         Path: /api/v4/system/e2e/ai_bridge
         Method: PUT
         """
@@ -98,7 +100,7 @@ class Api(ApiClientBase):
 
     def delete_a_i_bridge_test_helper(self, **kwargs) -> Any:
         """Reset AI bridge E2E test helper
-        
+
         Path: /api/v4/system/e2e/ai_bridge
         Method: DELETE
         """
@@ -107,7 +109,7 @@ class Api(ApiClientBase):
 
     def database_recycle(self, **kwargs) -> Any:
         """Recycle database connections
-        
+
         Path: /api/v4/database/recycle
         Method: POST
         """
@@ -116,7 +118,7 @@ class Api(ApiClientBase):
 
     def test_email(self, **kwargs) -> Any:
         """Send a test email
-        
+
         Path: /api/v4/email/test
         Method: POST
         """
@@ -125,7 +127,7 @@ class Api(ApiClientBase):
 
     def test_notification(self, **kwargs) -> Any:
         """Send a test notification
-        
+
         Path: /api/v4/notifications/test
         Method: POST
         """
@@ -134,7 +136,7 @@ class Api(ApiClientBase):
 
     def test_site_u_r_l(self, **kwargs) -> Any:
         """Checks the validity of a Site URL
-        
+
         Path: /api/v4/site_url/test
         Method: POST
         """
@@ -143,7 +145,7 @@ class Api(ApiClientBase):
 
     def test_s3_connection(self, **kwargs) -> Any:
         """Test AWS S3 connection
-        
+
         Path: /api/v4/file/s3_test
         Method: POST
         """
@@ -152,7 +154,7 @@ class Api(ApiClientBase):
 
     def get_config(self, **kwargs) -> Any:
         """Get configuration
-        
+
         Path: /api/v4/config
         Method: GET
         """
@@ -161,7 +163,7 @@ class Api(ApiClientBase):
 
     def update_config(self, **kwargs) -> Any:
         """Update configuration
-        
+
         Path: /api/v4/config
         Method: PUT
         """
@@ -170,7 +172,7 @@ class Api(ApiClientBase):
 
     def reload_config(self, **kwargs) -> Any:
         """Reload configuration
-        
+
         Path: /api/v4/config/reload
         Method: POST
         """
@@ -179,7 +181,7 @@ class Api(ApiClientBase):
 
     def migrate_config(self, **kwargs) -> Any:
         """Migrate config storage
-        
+
         Path: /api/v4/config/migrate
         Method: POST
         """
@@ -188,7 +190,7 @@ class Api(ApiClientBase):
 
     def get_client_config(self, **kwargs) -> Any:
         """Get client configuration
-        
+
         Path: /api/v4/config/client
         Method: GET
         """
@@ -197,7 +199,7 @@ class Api(ApiClientBase):
 
     def get_environment_config(self, **kwargs) -> Any:
         """Get configuration made through environment variables
-        
+
         Path: /api/v4/config/environment
         Method: GET
         """
@@ -206,7 +208,7 @@ class Api(ApiClientBase):
 
     def patch_config(self, **kwargs) -> Any:
         """Patch configuration
-        
+
         Path: /api/v4/config/patch
         Method: PUT
         """
@@ -215,7 +217,7 @@ class Api(ApiClientBase):
 
     def upload_license_file(self, **kwargs) -> Any:
         """Upload license file
-        
+
         Path: /api/v4/license
         Method: POST
         """
@@ -224,7 +226,7 @@ class Api(ApiClientBase):
 
     def remove_license_file(self, **kwargs) -> Any:
         """Remove license file
-        
+
         Path: /api/v4/license
         Method: DELETE
         """
@@ -233,7 +235,7 @@ class Api(ApiClientBase):
 
     def get_client_license(self, **kwargs) -> Any:
         """Get client license
-        
+
         Path: /api/v4/license/client
         Method: GET
         """
@@ -242,7 +244,7 @@ class Api(ApiClientBase):
 
     def get_license_load_metric(self, **kwargs) -> Any:
         """Get license load metric
-        
+
         Path: /api/v4/license/load_metric
         Method: GET
         """
@@ -251,7 +253,7 @@ class Api(ApiClientBase):
 
     def request_trial_license(self, **kwargs) -> Any:
         """Request and install a trial license for your server
-        
+
         Path: /api/v4/trial-license
         Method: POST
         """
@@ -260,7 +262,7 @@ class Api(ApiClientBase):
 
     def get_prev_trial_license(self, **kwargs) -> Any:
         """Get last trial license used
-        
+
         Path: /api/v4/trial-license/prev
         Method: GET
         """
@@ -269,7 +271,7 @@ class Api(ApiClientBase):
 
     def get_audits(self, **kwargs) -> Any:
         """Get audits
-        
+
         Path: /api/v4/audits
         Method: GET
         """
@@ -278,7 +280,7 @@ class Api(ApiClientBase):
 
     def invalidate_caches(self, **kwargs) -> Any:
         """Invalidate all the caches
-        
+
         Path: /api/v4/caches/invalidate
         Method: POST
         """
@@ -287,7 +289,7 @@ class Api(ApiClientBase):
 
     def get_logs(self, **kwargs) -> Any:
         """Get logs
-        
+
         Path: /api/v4/logs
         Method: GET
         """
@@ -296,7 +298,7 @@ class Api(ApiClientBase):
 
     def post_log(self, **kwargs) -> Any:
         """Add log message
-        
+
         Path: /api/v4/logs
         Method: POST
         """
@@ -305,7 +307,7 @@ class Api(ApiClientBase):
 
     def query_logs(self, **kwargs) -> Any:
         """Query server logs with filters
-        
+
         Path: /api/v4/logs/query
         Method: POST
         """
@@ -314,7 +316,7 @@ class Api(ApiClientBase):
 
     def get_analytics_old(self, **kwargs) -> Any:
         """Get analytics
-        
+
         Path: /api/v4/analytics/old
         Method: GET
         """
@@ -323,7 +325,7 @@ class Api(ApiClientBase):
 
     def get_latest_version(self, **kwargs) -> Any:
         """Get latest public server release information
-        
+
         Path: /api/v4/latest_version
         Method: GET
         """
@@ -332,7 +334,7 @@ class Api(ApiClientBase):
 
     def get_applied_schema_migrations(self, **kwargs) -> Any:
         """Get applied database schema migrations
-        
+
         Path: /api/v4/system/schema/version
         Method: GET
         """
@@ -341,7 +343,7 @@ class Api(ApiClientBase):
 
     def get_server_busy_expires(self, **kwargs) -> Any:
         """Get server busy expiry time.
-        
+
         Path: /api/v4/server_busy
         Method: GET
         """
@@ -350,7 +352,7 @@ class Api(ApiClientBase):
 
     def set_server_busy(self, **kwargs) -> Any:
         """Set the server busy (high load) flag
-        
+
         Path: /api/v4/server_busy
         Method: POST
         """
@@ -359,7 +361,7 @@ class Api(ApiClientBase):
 
     def clear_server_busy(self, **kwargs) -> Any:
         """Clears the server busy (high load) flag
-        
+
         Path: /api/v4/server_busy
         Method: DELETE
         """
@@ -368,7 +370,7 @@ class Api(ApiClientBase):
 
     def acknowledge_notification(self, **kwargs) -> Any:
         """Acknowledge receiving of a notification
-        
+
         Path: /api/v4/notifications/ack
         Method: POST
         """
@@ -377,7 +379,7 @@ class Api(ApiClientBase):
 
     def get_redirect_location(self, **kwargs) -> Any:
         """Get redirect location
-        
+
         Path: /api/v4/redirect_location
         Method: GET
         """
@@ -386,7 +388,7 @@ class Api(ApiClientBase):
 
     def get_image_by_url(self, **kwargs) -> Any:
         """Get an image by url
-        
+
         Path: /api/v4/image
         Method: GET
         """
@@ -395,7 +397,7 @@ class Api(ApiClientBase):
 
     def upgrade_to_enterprise(self, **kwargs) -> Any:
         """Executes an inplace upgrade from Team Edition to Enterprise Edition
-        
+
         Path: /api/v4/upgrade_to_enterprise
         Method: POST
         """
@@ -404,7 +406,7 @@ class Api(ApiClientBase):
 
     def upgrade_to_enterprise_status(self, **kwargs) -> Any:
         """Get the current status for the inplace upgrade from Team Edition to Enterprise Edition
-        
+
         Path: /api/v4/upgrade_to_enterprise/status
         Method: GET
         """
@@ -413,7 +415,7 @@ class Api(ApiClientBase):
 
     def is_allowed_to_upgrade_to_enterprise(self, **kwargs) -> Any:
         """Check if the user is allowed to upgrade to Enterprise Edition
-        
+
         Path: /api/v4/upgrade_to_enterprise/allowed
         Method: GET
         """
@@ -422,7 +424,7 @@ class Api(ApiClientBase):
 
     def restart_server(self, **kwargs) -> Any:
         """Restart the system after an upgrade from Team Edition to Enterprise Edition
-        
+
         Path: /api/v4/restart
         Method: POST
         """
@@ -431,7 +433,7 @@ class Api(ApiClientBase):
 
     def check_integrity(self, **kwargs) -> Any:
         """Perform a database integrity check
-        
+
         Path: /api/v4/integrity
         Method: POST
         """
@@ -440,7 +442,7 @@ class Api(ApiClientBase):
 
     def generate_support_packet(self, **kwargs) -> Any:
         """Download a zip file which contains helpful and useful information for troubleshooting your mattermost instance.
-        
+
         Path: /api/v4/system/support_packet
         Method: GET
         """

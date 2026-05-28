@@ -1,6 +1,7 @@
 """
 This file was automatically generated. Do not edit manually.
 """
+
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -24,7 +25,9 @@ def register_custom_profile_attributes_tools(mcp: FastMCP):
     ) -> dict:
         """Manage Mattermost MCP custom_profile_attributes operations."""
         if ctx:
-            await ctx.info("Executing custom_profile_attributes operation: " + str(action) + "...")
+            await ctx.info(
+                "Executing custom_profile_attributes operation: " + str(action) + "..."
+            )
         import json
 
         try:
@@ -48,4 +51,6 @@ def register_custom_profile_attributes_tools(mcp: FastMCP):
                 return {"status": "success"}
             return res
         except Exception as e:
-            return {"error": "Failed to execute operation " + str(action) + ": " + str(e)}
+            return {
+                "error": "Failed to execute operation " + str(action) + ": " + str(e)
+            }

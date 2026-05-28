@@ -1,6 +1,7 @@
 """
 This file was automatically generated. Do not edit manually.
 """
+
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -14,7 +15,7 @@ def register_files_tools(mcp: FastMCP):
     @mcp.tool(tags=["files"])
     async def mattermost_mcp_files(
         action: str = Field(
-            description="Action to perform. Must be one of: 'upload_file', 'get_file', 'get_file_thumbnail', 'get_file_preview', 'get_file_link', 'get_file_info', 'get_file_public', 'search_files', 'search_files'"
+            description="Action to perform. Must be one of: 'upload_file', 'get_file', 'get_file_thumbnail', 'get_file_preview', 'get_file_link', 'get_file_info', 'get_file_public', 'search_team_files', 'search_files'"
         ),
         params_json: str = Field(
             default="{}", description="JSON string of parameters."
@@ -48,4 +49,6 @@ def register_files_tools(mcp: FastMCP):
                 return {"status": "success"}
             return res
         except Exception as e:
-            return {"error": "Failed to execute operation " + str(action) + ": " + str(e)}
+            return {
+                "error": "Failed to execute operation " + str(action) + ": " + str(e)
+            }

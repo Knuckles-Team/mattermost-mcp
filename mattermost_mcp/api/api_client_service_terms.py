@@ -1,14 +1,16 @@
 """
 This file was automatically generated. Do not edit manually.
 """
+
 from typing import Any
+
 from mattermost_mcp.api.api_client_base import ApiClientBase
 
 
 class Api(ApiClientBase):
     def get_terms_of_service(self, **kwargs) -> Any:
         """Get latest terms of service
-        
+
         Path: /api/v4/terms_of_service
         Method: GET
         """
@@ -17,7 +19,7 @@ class Api(ApiClientBase):
 
     def create_terms_of_service(self, **kwargs) -> Any:
         """Creates a new terms of service
-        
+
         Path: /api/v4/terms_of_service
         Method: POST
         """

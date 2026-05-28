@@ -1,6 +1,7 @@
 """
 This file was automatically generated. Do not edit manually.
 """
+
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -24,7 +25,9 @@ def register_outgoing_oauth_connections_tools(mcp: FastMCP):
     ) -> dict:
         """Manage Mattermost MCP outgoing_oauth_connections operations."""
         if ctx:
-            await ctx.info("Executing outgoing_oauth_connections operation: " + str(action) + "...")
+            await ctx.info(
+                "Executing outgoing_oauth_connections operation: " + str(action) + "..."
+            )
         import json
 
         try:
@@ -48,4 +51,6 @@ def register_outgoing_oauth_connections_tools(mcp: FastMCP):
                 return {"status": "success"}
             return res
         except Exception as e:
-            return {"error": "Failed to execute operation " + str(action) + ": " + str(e)}
+            return {
+                "error": "Failed to execute operation " + str(action) + ": " + str(e)
+            }

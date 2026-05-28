@@ -1,14 +1,16 @@
 """
 This file was automatically generated. Do not edit manually.
 """
+
 from typing import Any
+
 from mattermost_mcp.api.api_client_base import ApiClientBase
 
 
 class Api(ApiClientBase):
     def get_saml_metadata(self, **kwargs) -> Any:
         """Get metadata
-        
+
         Path: /api/v4/saml/metadata
         Method: GET
         """
@@ -17,7 +19,7 @@ class Api(ApiClientBase):
 
     def get_saml_metadata_from_idp(self, **kwargs) -> Any:
         """Get metadata from Identity Provider
-        
+
         Path: /api/v4/saml/metadatafromidp
         Method: POST
         """
@@ -26,7 +28,7 @@ class Api(ApiClientBase):
 
     def upload_saml_idp_certificate(self, **kwargs) -> Any:
         """Upload IDP certificate
-        
+
         Path: /api/v4/saml/certificate/idp
         Method: POST
         """
@@ -35,7 +37,7 @@ class Api(ApiClientBase):
 
     def delete_saml_idp_certificate(self, **kwargs) -> Any:
         """Remove IDP certificate
-        
+
         Path: /api/v4/saml/certificate/idp
         Method: DELETE
         """
@@ -44,7 +46,7 @@ class Api(ApiClientBase):
 
     def upload_saml_public_certificate(self, **kwargs) -> Any:
         """Upload public certificate
-        
+
         Path: /api/v4/saml/certificate/public
         Method: POST
         """
@@ -53,7 +55,7 @@ class Api(ApiClientBase):
 
     def delete_saml_public_certificate(self, **kwargs) -> Any:
         """Remove public certificate
-        
+
         Path: /api/v4/saml/certificate/public
         Method: DELETE
         """
@@ -62,7 +64,7 @@ class Api(ApiClientBase):
 
     def upload_saml_private_certificate(self, **kwargs) -> Any:
         """Upload private key
-        
+
         Path: /api/v4/saml/certificate/private
         Method: POST
         """
@@ -71,7 +73,7 @@ class Api(ApiClientBase):
 
     def delete_saml_private_certificate(self, **kwargs) -> Any:
         """Remove private key
-        
+
         Path: /api/v4/saml/certificate/private
         Method: DELETE
         """
@@ -80,7 +82,7 @@ class Api(ApiClientBase):
 
     def get_saml_certificate_status(self, **kwargs) -> Any:
         """Get certificate status
-        
+
         Path: /api/v4/saml/certificate/status
         Method: GET
         """
@@ -89,7 +91,7 @@ class Api(ApiClientBase):
 
     def reset_saml_auth_data_to_email(self, **kwargs) -> Any:
         """Reset AuthData to Email
-        
+
         Path: /api/v4/saml/reset_auth_data
         Method: POST
         """
