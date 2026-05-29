@@ -1,7 +1,7 @@
 # Mattermost MCP
 
 [![Status](https://img.shields.io/badge/status-active-success)](https://github.com/genius-agents/mattermost-mcp)
-[![Version](https://img.shields.io/badge/version-0.17.1-blue)](pyproject.toml)
+[![Version](https://img.shields.io/badge/version-0.18.0-blue)](pyproject.toml)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 Mattermost enterprise messaging collaboration server. Built with the highest architectural standards, incorporating dynamic facades, custom API routing, and FastMCP tool decoration.
