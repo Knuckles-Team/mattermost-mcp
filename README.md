@@ -6,6 +6,11 @@
 
 Mattermost enterprise messaging collaboration server. Built with the highest architectural standards, incorporating dynamic facades, custom API routing, and FastMCP tool decoration.
 
+> **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
+> interfaces, the companion agent server, and guidance for provisioning the Mattermost
+> platform are maintained in the
+> [official documentation](https://knuckles-team.github.io/mattermost-mcp/).
+
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
@@ -158,6 +163,24 @@ A standard compose structure is provided inside the `docker/` folder. Build and 
 ```bash
 docker compose -f docker/compose.yml up --build -d
 ```
+
+---
+
+## Documentation
+
+The complete documentation is published as the
+[official documentation site](https://knuckles-team.github.io/mattermost-mcp/) and is
+the recommended reference for installation, deployment, and day-to-day operation.
+
+| Page | Contents |
+|---|---|
+| [Installation](https://knuckles-team.github.io/mattermost-mcp/installation/) | pip, source, extras, prebuilt Docker image |
+| [Deployment](https://knuckles-team.github.io/mattermost-mcp/deployment/) | run the MCP server and agent, Compose, Caddy + Technitium, env config |
+| [Usage](https://knuckles-team.github.io/mattermost-mcp/usage/) | the MCP tools, the `Api` client, the CLI |
+| [Backing Platform](https://knuckles-team.github.io/mattermost-mcp/platform/) | deploy Mattermost with Docker |
+| [Overview](https://knuckles-team.github.io/mattermost-mcp/overview/) | dynamic facade and FastMCP integration |
+| [Architecture](https://knuckles-team.github.io/mattermost-mcp/architecture/) | dynamic facade, FastMCP, agent server |
+| [Concepts](https://knuckles-team.github.io/mattermost-mcp/concepts/) | concept registry (`CONCEPT:MM-*`) |
 
 ---
 
