@@ -28,10 +28,10 @@ mattermost-mcp = "mattermost_mcp.mcp_server:mcp_server"
 mattermost-agent = "mattermost_mcp.agent_server:agent_server"
 
 [project.entry-points."agent_utilities.skill_providers"]
-modular-contrib = "mattermost_mcp.skills"
+mattermost-mcp = "mattermost_mcp.skills"
 
 [project.entry-points."agent_utilities.prompt_providers"]
-modular-contrib = "mattermost_mcp.prompts"
+mattermost-mcp = "mattermost_mcp.prompts"
 
 [tool.setuptools]
 include-package-data = true
