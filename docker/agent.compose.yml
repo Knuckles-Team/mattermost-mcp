@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mattermost-mcp-mcp:
-    image: knucklessg1/mattermost-mcp:latest
+    image: knucklessg1/mattermost-mcp:mcp
     container_name: mattermost-mcp-mcp
     hostname: mattermost-mcp-mcp
     restart: always
