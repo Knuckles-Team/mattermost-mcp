@@ -16,7 +16,7 @@ Mattermost enterprise messaging collaboration server. Built with the highest arc
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Configuration](#configuration)
+- [Environment Variables](#environment-variables)
 - [MCP Tools](#mcp-tools)
 - [Architecture](#architecture)
 - [Deployment](#deployment)
@@ -64,17 +64,51 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
 
 ## Installation
 
-Install in editable mode directly inside your active workspace:
+Pick the extra that matches what you want to run:
+
+| Extra | Installs | Use when |
+|-------|----------|----------|
+| `mattermost-mcp[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | You only run the **MCP server** (smallest install / image) |
+| `mattermost-mcp[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | You run the **integrated agent** |
+| `mattermost-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
-pip install -e .[all]
+# MCP server only (recommended for tool hosting — slim deps)
+uv pip install "mattermost-mcp[mcp]"
+
+# Full agent runtime (Pydantic AI + epistemic-graph engine)
+uv pip install "mattermost-mcp[agent]"
+
+# Everything (development)
+uv pip install "mattermost-mcp[all]"      # or: python -m pip install "mattermost-mcp[all]"
 ```
 
-Or via the `uv` tool:
+### Container images (`:mcp` vs `:agent`)
+
+One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+
+| Image tag | Build target | Contents | Entrypoint |
+|-----------|--------------|----------|------------|
+| `knucklessg1/mattermost-mcp:mcp` | `--target mcp` | `mattermost-mcp[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `mattermost-mcp` |
+| `knucklessg1/mattermost-mcp:latest` | `--target agent` (default) | `mattermost-mcp[agent]` — **full** agent runtime + epistemic-graph engine | `mattermost-agent` |
 
 ```bash
-uv pip install -e .
+docker build --target mcp   -t knucklessg1/mattermost-mcp:mcp    docker/   # slim MCP server
+docker build --target agent -t knucklessg1/mattermost-mcp:latest docker/   # full agent
 ```
+
+`docker/mcp.compose.yml` runs the slim `:mcp` server; `docker/agent.compose.yml` runs the
+agent (`:latest`) with a co-located `:mcp` sidecar.
+
+### Knowledge-graph database (`epistemic-graph`)
+
+The **full agent** (`[agent]` / `:latest`) embeds the **epistemic-graph** engine (pulled in
+transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
+across multiple agents — run **epistemic-graph as its own database container** and point the
+agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
+config, and the full database architecture (with diagrams) are documented in the
+[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+The slim `[mcp]` server does **not** require the database.
 
 ---
 
@@ -103,16 +137,41 @@ python -m mattermost_mcp.mcp_server
 
 ---
 
-## Configuration
+## Environment Variables
 
-The package is fully configurable via the environment variables listed below:
+Every variable the server reads. A local template is supplied inside
+[.env.example](.env.example) — copy it to `.env` and fill in your endpoint/credentials.
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `MATTERMOST_URL` | Mattermost Server API v4 endpoint URL | `http://localhost:8065` | Yes |
-| `MATTERMOST_TOKEN` | Personal Access Token or Bot Token | `mattermost_api_access_token` | Yes |
+### Connection & Credentials
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MATTERMOST_URL` | Mattermost Server API v4 endpoint URL | `http://localhost:8065` |
+| `MATTERMOST_TOKEN` | Personal Access Token or Bot Token | — |
 
-A local template is supplied inside [.env.example](.env.example). Copy this file as `.env` and fill out your specific service endpoint parameters before starting execution.
+### MCP server / transport
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `TRANSPORT` | `stdio`, `streamable-http`, or `sse` | `stdio` |
+| `HOST` | Bind host (HTTP transports) | `0.0.0.0` |
+| `PORT` | Bind port (HTTP transports) | `8000` |
+| `MCP_TOOL_MODE` | Tool surface: `condensed`, `verbose`, or `both` | `condensed` |
+| `MCP_ENABLED_TOOLS` / `MCP_DISABLED_TOOLS` | Comma-separated tool allow/deny list | — |
+| `MCP_ENABLED_TAGS` / `MCP_DISABLED_TAGS` | Comma-separated tag allow/deny list | — |
+| `DEBUG` | Verbose logging | `False` |
+| `PYTHONUNBUFFERED` | Unbuffered stdout (recommended in containers) | `1` |
+
+### Tool toggles
+Each action-routed tool can be disabled individually via its toggle env var (set to `false`).
+The full list is in the [MCP Tools](#mcp-tools) table above (e.g. `CHANNELSTOOL`, `POSTSTOOL`,
+`USERSTOOL`, `TEAMSTOOL`).
+
+### Agent CLI (full `[agent]` runtime only)
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MCP_URL` | URL of the MCP server the agent connects to | `http://localhost:8000/mcp` |
+| `PROVIDER` | LLM provider (e.g. `openai`) | `openai` |
+| `MODEL_ID` | Model id (e.g. `gpt-4o`) | `gpt-4o` |
+| `ENABLE_WEB_UI` | Serve the AG-UI web interface | `True` |
 
 ---
 
