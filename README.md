@@ -139,6 +139,99 @@ python -m mattermost_mcp.mcp_server
 
 ## Environment Variables
 
+<!-- ENV-VARS-TABLE:START -->
+
+#### Package environment variables
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `MATTERMOST_URL` | `http://localhost:8065` | Mattermost Server API v4 endpoint URL |
+| `MATTERMOST_TOKEN` | `mattermost_api_access_token` | Personal Access Token or Bot Token |
+| `ACCESS_CONTROLTOOL` | `True` | MCP tools table (condensed action-routed surface). |
+| `ACTIONSTOOL` | `True` |  |
+| `AGENTSTOOL` | `True` |  |
+| `AUDIT_LOGGINGTOOL` | `True` |  |
+| `BOARDSTOOL` | `True` |  |
+| `BOOKMARKSTOOL` | `True` |  |
+| `BOTSTOOL` | `True` |  |
+| `BRANDTOOL` | `True` |  |
+| `CHANNELSTOOL` | `True` |  |
+| `CLOUDTOOL` | `True` |  |
+| `CLUSTERTOOL` | `True` |  |
+| `COMMANDSTOOL` | `True` |  |
+| `COMPLIANCETOOL` | `True` |  |
+| `CONTENT_FLAGGINGTOOL` | `True` |  |
+| `CUSTOM_PROFILE_ATTRIBUTESTOOL` | `True` |  |
+| `DATARETENTIONTOOL` | `True` |  |
+| `ELASTICSEARCHTOOL` | `True` |  |
+| `EMOJITOOL` | `True` |  |
+| `EXPORTSTOOL` | `True` |  |
+| `FILESTOOL` | `True` |  |
+| `GROUPSTOOL` | `True` |  |
+| `IMPORTSTOOL` | `True` |  |
+| `IP_FILTERSTOOL` | `True` |  |
+| `JOBSTOOL` | `True` |  |
+| `LDAPTOOL` | `True` |  |
+| `LIMITSTOOL` | `True` |  |
+| `LOGSTOOL` | `True` |  |
+| `METRICSTOOL` | `True` |  |
+| `OAUTHTOOL` | `True` |  |
+| `OUTGOING_OAUTH_CONNECTIONSTOOL` | `True` |  |
+| `PERMISSIONSTOOL` | `True` |  |
+| `PLUGINSTOOL` | `True` |  |
+| `POSTSTOOL` | `True` |  |
+| `PREFERENCESTOOL` | `True` |  |
+| `PROPERTIESTOOL` | `True` |  |
+| `REACTIONSTOOL` | `True` |  |
+| `RECAPSTOOL` | `True` |  |
+| `REMOTECLUSTERSTOOL` | `True` |  |
+| `REPORTSTOOL` | `True` |  |
+| `ROLESTOOL` | `True` |  |
+| `SAMLTOOL` | `True` |  |
+| `SCHEDULED_POSTTOOL` | `True` |  |
+| `SCHEMESTOOL` | `True` |  |
+| `SERVICE_TERMSTOOL` | `True` |  |
+| `SHAREDCHANNELSTOOL` | `True` |  |
+| `STATUSTOOL` | `True` |  |
+| `SYSTEMTOOL` | `True` |  |
+| `TEAMSTOOL` | `True` |  |
+| `UPLOADSTOOL` | `True` |  |
+| `USAGETOOL` | `True` |  |
+| `USERSTOOL` | `True` |  |
+| `VIEWSTOOL` | `True` |  |
+| `WEBHOOKSTOOL` | `True` |  |
+
+#### Inherited agent-utilities variables (apply to every connector)
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `TRANSPORT` | `stdio` | MCP transport: `stdio` | `streamable-http` | `sse` |
+| `HOST` | `0.0.0.0` | Bind host (HTTP transports) |
+| `PORT` | `8000` | Bind port (HTTP transports) |
+| `MCP_TOOL_MODE` | `condensed` | Tool surface: `condensed` | `verbose` | `both` |
+| `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
+| `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
+| `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
+| `MCP_DISABLED_TAGS` | — | Comma-separated tag deny-list |
+| `EUNOMIA_TYPE` | `none` | Authorization mode: `none` | `embedded` | `remote` |
+| `EUNOMIA_POLICY_FILE` | `mcp_policies.json` | Embedded Eunomia policy file |
+| `EUNOMIA_REMOTE_URL` | — | Remote Eunomia authorization server URL |
+| `ENABLE_OTEL` | `False` | Enable OpenTelemetry export |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | — | OTLP collector endpoint |
+| `MCP_CLIENT_AUTH` | — | Outbound MCP auth (`oidc-client-credentials` for fleet calls) |
+| `OIDC_CLIENT_ID` | — | OIDC client id (service-account auth) |
+| `OIDC_CLIENT_SECRET` | — | OIDC client secret (service-account auth) |
+| `DEBUG` | `False` | Verbose logging |
+| `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
+| `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
+| `PROVIDER` | `openai` | LLM provider for the agent |
+| `MODEL_ID` | `gpt-4o` | Model id for the agent |
+| `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
+
+_55 package + 22 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+<!-- ENV-VARS-TABLE:END -->
+
+
 Every variable the server reads. A local template is supplied inside
 [.env.example](.env.example) — copy it to `.env` and fill in your endpoint/credentials.
 
