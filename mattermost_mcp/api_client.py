@@ -1,4 +1,4 @@
-"""CONCEPT:MM-001 Dynamic client facade orchestration and resource mappings."""
+"""CONCEPT:MM-OS.governance.mm Dynamic client facade orchestration and resource mappings."""
 
 # !/usr/bin/env python
 from mattermost_mcp.api.api_client_access_control import Api as AccessControlApi

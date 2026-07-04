@@ -1,12 +1,12 @@
 # Concept Registry — Mattermost MCP
 
 > **Prefix**: `CONCEPT:MM-*`
-> **Bridge**: `CONCEPT:ECO-4.0` (Unified Toolkit Ingestion)
+> **Bridge**: `CONCEPT:AU-ECO.messaging.native-backend-abstraction` (Unified Toolkit Ingestion)
 
 ## Project-Specific Concepts
 
 | Concept ID | Name | Description |
 |------------|------|-------------|
-| `CONCEPT:MM-001` | Core API Client Operations | Exposes core client capability facade |
-| `CONCEPT:MM-002` | FastMCP Tools Execution | Exposes FastMCP tool interface capabilities |
-| `CONCEPT:MM-003` | Identity & Gateway Security | Exposes authentication, authorization, and secure transport operations |
+| `CONCEPT:MM-OS.governance.mm` | Core API Client Operations | Exposes core client capability facade |
+| `CONCEPT:MM-OS.governance.mm-2` | FastMCP Tools Execution | Exposes FastMCP tool interface capabilities |
+| `CONCEPT:MM-OS.identity.mm` | Identity & Gateway Security | Exposes authentication, authorization, and secure transport operations |

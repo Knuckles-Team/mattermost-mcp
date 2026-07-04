@@ -275,7 +275,7 @@ for module_info in generated_modules:
 
 api_client_classes_str = ", ".join(api_client_classes)
 
-api_client_content = """\"\"\"CONCEPT:MM-001 Dynamic client facade orchestration and resource mappings.\"\"\"
+api_client_content = """\"\"\"CONCEPT:MM-OS.governance.mm Dynamic client facade orchestration and resource mappings.\"\"\"
 # !/usr/bin/env python
 """
 api_client_content += "\n".join(api_client_imports) + "\n\n"

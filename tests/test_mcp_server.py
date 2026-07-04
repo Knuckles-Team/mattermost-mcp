@@ -1,9 +1,9 @@
 import pytest
 
 
-@pytest.mark.concept("MM-002")
+@pytest.mark.concept("MM-OS.governance.mm-2")
 def test_mcp_server_registration():
-    """CONCEPT:MM-002 Test that tools register successfully."""
+    """CONCEPT:MM-OS.governance.mm-2 Test that tools register successfully."""
     from mattermost_mcp.mcp_server import get_mcp_instance
 
     res = get_mcp_instance()
@@ -17,9 +17,9 @@ def test_mcp_server_registration():
     assert len(mcp._local_provider._components) > 0
 
 
-@pytest.mark.concept("MM-003")
+@pytest.mark.concept("MM-OS.identity.mm")
 def test_mcp_server_security_context():
-    """CONCEPT:MM-003 Verify that the server registers with correct security credentials."""
+    """CONCEPT:MM-OS.identity.mm Verify that the server registers with correct security credentials."""
     from mattermost_mcp.auth import get_client
 
     client = get_client()
