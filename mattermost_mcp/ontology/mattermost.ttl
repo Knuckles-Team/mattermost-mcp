@@ -1,0 +1,116 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://knuckles.team/kg#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Mattermost team-collaboration ontology — teams, channels, people, messages and file
+# attachments. All classes and properties live in the shared `:` (kg#) namespace; only the
+# owl:Ontology node gets the per-package IRI. Reuses the hub-shared :Person / :Document /
+# :MediaAsset / :Blob classes (never redefined here). Backs the mattermost-mcp MCP tool
+# surface (mattermost_mcp_teams / _channels / _users / _posts / _files).
+
+:Team a owl:Class ;
+    rdfs:label "Team" ;
+    rdfs:comment "A Mattermost team: a top-level workspace that owns channels and members (mattermost_mcp_teams)." .
+
+:Channel a owl:Class ;
+    rdfs:label "Channel" ;
+    rdfs:comment "A conversation channel within a team — public (O), private (P), direct (D) or group (G) (mattermost_mcp_channels)." .
+
+:Bot a owl:Class ;
+    rdfs:label "Bot" ;
+    rdfs:comment "A Mattermost bot account that can post and act in channels (mattermost_mcp_bots)." .
+
+# Messages (posts) are modelled as the shared :Document class so they are chunked/embedded
+# and become semantic-search fodder; file attachments as the shared :MediaAsset (raw :Blob).
+
+# --- links (owl:ObjectProperty) ---
+
+:inTeam a owl:ObjectProperty ;
+    rdfs:label "in team" ;
+    rdfs:comment "Links a Channel to the Team that owns it." ;
+    rdfs:domain :Channel ;
+    rdfs:range :Team .
+
+:postedInChannel a owl:ObjectProperty ;
+    rdfs:label "posted in channel" ;
+    rdfs:comment "Links a message (:Document) to the Channel it was posted in." ;
+    rdfs:range :Channel .
+
+:authoredBy a owl:ObjectProperty ;
+    rdfs:label "authored by" ;
+    rdfs:comment "Links a message (:Document) to the Person or Bot who wrote it." ;
+    rdfs:range :Person .
+
+:memberOfTeam a owl:ObjectProperty ;
+    rdfs:label "member of team" ;
+    rdfs:comment "Links a Person to a Team they belong to." ;
+    rdfs:domain :Person ;
+    rdfs:range :Team .
+
+:memberOfChannel a owl:ObjectProperty ;
+    rdfs:label "member of channel" ;
+    rdfs:comment "Links a Person to a Channel they belong to." ;
+    rdfs:domain :Person ;
+    rdfs:range :Channel .
+
+:hasAttachment a owl:ObjectProperty ;
+    rdfs:label "has attachment" ;
+    rdfs:comment "Links a message (:Document) to a file attachment (:MediaAsset) uploaded with it." ;
+    rdfs:range :MediaAsset .
+
+:repliesTo a owl:ObjectProperty ;
+    rdfs:label "replies to" ;
+    rdfs:comment "Links a message (:Document) to the root message of its thread." .
+
+# --- fields (owl:DatatypeProperty) ---
+
+:channelType a owl:DatatypeProperty ;
+    rdfs:label "channel type" ;
+    rdfs:comment "Mattermost channel type code: O (open/public), P (private), D (direct), G (group)." ;
+    rdfs:domain :Channel ;
+    rdfs:range xsd:string .
+
+:teamType a owl:DatatypeProperty ;
+    rdfs:label "team type" ;
+    rdfs:comment "Mattermost team type code: O (open) or I (invite-only)." ;
+    rdfs:domain :Team ;
+    rdfs:range xsd:string .
+
+:displayName a owl:DatatypeProperty ;
+    rdfs:label "display name" ;
+    rdfs:comment "Human-facing display name of a Team or Channel." ;
+    rdfs:range xsd:string .
+
+:purpose a owl:DatatypeProperty ;
+    rdfs:label "purpose" ;
+    rdfs:comment "Short stated purpose of a Channel." ;
+    rdfs:domain :Channel ;
+    rdfs:range xsd:string .
+
+:header a owl:DatatypeProperty ;
+    rdfs:label "header" ;
+    rdfs:comment "Header/topic text shown at the top of a Channel." ;
+    rdfs:domain :Channel ;
+    rdfs:range xsd:string .
+
+:username a owl:DatatypeProperty ;
+    rdfs:label "username" ;
+    rdfs:comment "Mattermost login handle of a Person or Bot." ;
+    rdfs:range xsd:string .
+
+:messageType a owl:DatatypeProperty ;
+    rdfs:label "message type" ;
+    rdfs:comment "Post type of a message (empty for a normal post, or a system message type)." ;
+    rdfs:range xsd:string .
+
+<http://knuckles.team/kg/mattermost> a owl:Ontology ;
+    rdfs:label "Mattermost Collaboration Ontology" ;
+    rdfs:comment """Mattermost team-collaboration model — teams, channels, people and bots,
+    plus messages (as shared :Document nodes) and their file attachments (as shared
+    :MediaAsset blobs) with their membership, authorship and threading relationships —
+    federated into the agent-utilities knowledge-graph hub.""" ;
+    owl:imports <http://knuckles.team/kg> .

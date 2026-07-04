@@ -1,0 +1,33 @@
+{
+  "_comment": "Tier-1 mcp_tool source presets for mattermost-mcp (AU-KG.ingest.mcp-tool-connector). Declarative sync of Mattermost objects into the KG via the mattermost-mcp MCP server condensed tools. Contributed presets win over the central MCP_TOOL_PRESETS. For full typed-node + message-document + attachment-blob ingestion prefer the native mattermost_ingest_* tools (kg_ingest.py / kg_media.py).",
+  "mattermost-teams": {
+    "server": "mattermost-mcp",
+    "tool": "mattermost_mcp_teams",
+    "action": "get_all_teams",
+    "records_path": "data",
+    "id_field": "id",
+    "title_field": "display_name",
+    "text_field": "description",
+    "updated_field": "update_at",
+    "pagination": "page",
+    "page_kind": "page",
+    "page_param": "page",
+    "page_size_param": "per_page",
+    "doc_type": "team"
+  },
+  "mattermost-channels": {
+    "server": "mattermost-mcp",
+    "tool": "mattermost_mcp_channels",
+    "action": "get_all_channels",
+    "records_path": "data",
+    "id_field": "id",
+    "title_field": "display_name",
+    "text_field": "purpose",
+    "updated_field": "update_at",
+    "pagination": "page",
+    "page_kind": "page",
+    "page_param": "page",
+    "page_size_param": "per_page",
+    "doc_type": "channel"
+  }
+}

@@ -40,6 +40,7 @@ from mattermost_mcp.mcp.mcp_groups import register_groups_tools
 from mattermost_mcp.mcp.mcp_imports import register_imports_tools
 from mattermost_mcp.mcp.mcp_ip_filters import register_ip_filters_tools
 from mattermost_mcp.mcp.mcp_jobs import register_jobs_tools
+from mattermost_mcp.mcp.mcp_kg import register_kg_tools
 from mattermost_mcp.mcp.mcp_ldap import register_ldap_tools
 from mattermost_mcp.mcp.mcp_limits import register_limits_tools
 from mattermost_mcp.mcp.mcp_logs import register_logs_tools
@@ -104,6 +105,7 @@ __all__ = [
     "register_imports_tools",
     "register_ip_filters_tools",
     "register_jobs_tools",
+    "register_kg_tools",
     "register_ldap_tools",
     "register_limits_tools",
     "register_logs_tools",
