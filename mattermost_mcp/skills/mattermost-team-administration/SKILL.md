@@ -1,5 +1,6 @@
 ---
 name: mattermost-team-administration
+skill_type: skill
 description: >-
   Administer Mattermost teams and channels via the mattermost-mcp MCP server —
   list/create teams, list/create/rename/archive channels, set channel privacy, and

@@ -1,5 +1,6 @@
 ---
 name: mattermost-channel-messaging
+skill_type: skill
 description: >-
   Read and post Mattermost messages via the mattermost-mcp MCP server — list a
   channel's posts and threads, search posts, create a post or a threaded reply,

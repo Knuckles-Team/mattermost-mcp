@@ -1,5 +1,6 @@
 ---
 name: mattermost-kg-ingestion
+skill_type: skill
 description: >-
   Natively ingest Mattermost into the epistemic-graph knowledge graph via the
   mattermost-mcp MCP server — push teams, channels and users as typed
