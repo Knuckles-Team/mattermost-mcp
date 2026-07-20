@@ -1,0 +1,31 @@
+schema_version: '1'
+connector: mattermost-mcp
+ontology_source: mattermost
+sync:
+- preset: mattermost-channels
+  server: mattermost-mcp
+  tool: mattermost_mcp_channels
+  action: get_all_channels
+  records_path: data
+  id_field: id
+  title_field: display_name
+  text_field: purpose
+  updated_field: update_at
+  doc_type: channel
+  tool_schema_sha256: 3d902155dd8368ab24efbf0b8d18f4fdb50053e943a7dfb294032e58de6a4a36
+- preset: mattermost-teams
+  server: mattermost-mcp
+  tool: mattermost_mcp_teams
+  action: get_all_teams
+  records_path: data
+  id_field: id
+  title_field: display_name
+  text_field: description
+  updated_field: update_at
+  doc_type: team
+  tool_schema_sha256: 360d48a2ef75a69e692004d092c812db4dfece974dd5f41a7499430713494b76
+governance:
+  default_acl: quarantine
+  identity: opaque-reference
+  tenant: required-at-materialization
+  provenance: required-at-materialization

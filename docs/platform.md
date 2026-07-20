@@ -20,7 +20,7 @@ stack runs the server with a PostgreSQL backend and publishes the web/API on `:8
 # docker/mattermost-platform.compose.yml
 services:
   mattermost:
-    image: mattermost/mattermost-team-edition:latest
+    image: mattermost/mattermost-team-edition@sha256:<digest>
     container_name: mattermost
     hostname: mattermost
     restart: unless-stopped
@@ -91,7 +91,7 @@ services:
     volumes: ["mattermost_db:/var/lib/postgresql/data"]
 
   mattermost:
-    image: mattermost/mattermost-team-edition:latest
+    image: mattermost/mattermost-team-edition@sha256:<digest>
     depends_on: [mattermost-db]
     ports: ["8065:8065"]
     environment:
@@ -101,7 +101,7 @@ services:
     volumes: ["mattermost_config:/mattermost/config", "mattermost_data:/mattermost/data"]
 
   mattermost-mcp:
-    image: knucklessg1/mattermost-mcp:latest
+    image: example/mattermost-mcp@sha256:<digest>
     depends_on: [mattermost]
     environment:
       - MATTERMOST_URL=http://mattermost:8065

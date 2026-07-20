@@ -14,8 +14,6 @@ def get_client() -> Api:
     token = setting("MATTERMOST_TOKEN", "")
     username = setting("MATTERMOST_MCP_USERNAME", "")
     password = setting("MATTERMOST_MCP_PASSWORD", "")
-    verify = setting("MATTERMOST_MCP_SSL_VERIFY", True)
-
     if not base_url:
         # Default fallback for testing
         base_url = "http://localhost"
@@ -25,5 +23,4 @@ def get_client() -> Api:
         token=token,
         username=username,
         password=password,
-        verify=verify,
     )

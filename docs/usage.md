@@ -36,7 +36,6 @@ from mattermost_mcp.api_client import Api
 api = Api(
     base_url="http://your-mattermost:8065",
     token="your_personal_access_token",
-    verify=True,
 )
 
 # Reads

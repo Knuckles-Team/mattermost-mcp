@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mattermost MCP Operations"
+  short_description: "Help with Mattermost MCP Operations tasks"
+  default_prompt: "Use $mattermost-mcp-operations to complete a governed provider workflow."

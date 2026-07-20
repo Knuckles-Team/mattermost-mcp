@@ -1,10 +1,15 @@
 import os
 import re
+from pathlib import Path
 
 import yaml
 
-source_dir = "/home/apps/workspace/open-source-libraries/mattermost/api/v4/source"
-package_dir = "/home/apps/workspace/agent-packages/agents/mattermost-mcp/mattermost_mcp"
+source_dir = os.environ.get("MATTERMOST_OPENAPI_SOURCE")
+if not source_dir:
+    raise SystemExit("MATTERMOST_OPENAPI_SOURCE must reference the OpenAPI source")
+package_dir = os.environ.get(
+    "MATTERMOST_MCP_PACKAGE_DIR", str(Path(__file__).resolve().parent / "mattermost_mcp")
+)
 api_dir = os.path.join(package_dir, "api")
 mcp_dir = os.path.join(package_dir, "mcp")
 
@@ -53,7 +58,7 @@ for file in api_files:
         try:
             content = yaml.safe_load(f)
         except Exception as e:
-            print(f"Error loading {file}: {e}")
+            print(f"Operation failed: {type(e).__name__}")
             continue
 
     if not content:
@@ -184,7 +189,7 @@ def register_{module_name}_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {{"error": "Invalid params_json: " + str(e)}}
+            return {{"error": "Invalid params_json"}}
 
         kwargs = {{k: v for k, v in kwargs.items() if v is not None}}
 
@@ -202,7 +207,7 @@ def register_{module_name}_tools(mcp: FastMCP):
                 return {{"status": "success"}}
             return res
         except Exception as e:
-            return {{"error": "Failed to execute operation " + str(action) + ": " + str(e)}}
+            return {{"error": "Operation failed"}}
 """
     with open(mcp_filepath, "w") as f:
         f.write(mcp_content)
@@ -311,7 +316,7 @@ import sys
 from typing import Any
 
 from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server
+from agent_utilities.mcp.server_factory import create_mcp_server
 from dotenv import find_dotenv, load_dotenv
 from fastmcp.utilities.logging import get_logger
 from starlette.requests import Request

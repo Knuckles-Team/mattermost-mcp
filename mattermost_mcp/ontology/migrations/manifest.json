@@ -1,0 +1,6 @@
+{
+  "connector": "mattermost-mcp",
+  "current_ontology_source": "mattermost",
+  "migrations": [],
+  "schema_version": "1"
+}

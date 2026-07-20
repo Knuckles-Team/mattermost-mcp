@@ -8,6 +8,9 @@ CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 
 from __future__ import annotations
 
+import pytest
+from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
+
 from mattermost_mcp.kg_ingest import (
     ingest_channels,
     ingest_documents,
@@ -21,6 +24,7 @@ from mattermost_mcp.kg_ingest import (
 class _FakeTxn:
     def __init__(self):
         self.nodes = {}
+        self.edges = []
         self.committed = False
 
     def begin(self, graph=None):
@@ -30,33 +34,27 @@ class _FakeTxn:
     def add_node(self, txn, node_id, props):
         self.nodes[node_id] = props
 
+    def add_edge(self, txn, source, target, props):
+        self.edges.append((source, target, props))
+
     def commit(self, txn):
         self.committed = True
         return True
 
 
-class _FakeEdges:
-    def __init__(self):
-        self.edges = []
-
-    def add(self, src, dst, props):
-        self.edges.append((src, dst, props))
-
-
 class _FakeClient:
     def __init__(self):
         self.txn = _FakeTxn()
-        self.edges = _FakeEdges()
 
 
 def test_ingest_entities_writes_nodes_and_edges():
     c = _FakeClient()
     res = ingest_entities(
         [
-            {"id": "a", "type": "Channel", "name": "town-square"},
-            {"id": "b", "type": "Team"},
+            {"id": "a", "node_type": "Channel", "name": "town-square"},
+            {"id": "b", "node_type": "Team"},
         ],
-        [{"source": "a", "target": "b", "type": "inTeam"}],
+        [{"source": "a", "target": "b", "relationship": "inTeam"}],
         client=c,
         graph="__commons__",
     )
@@ -66,7 +64,7 @@ def test_ingest_entities_writes_nodes_and_edges():
     # provenance is stamped
     assert c.txn.nodes["a"]["source"] == "mattermost-mcp"
     assert c.txn.nodes["a"]["domain"] == "mattermost"
-    assert c.edges.edges == [("a", "b", {"type": "inTeam"})]
+    assert c.txn.edges == [("a", "b", {"relationship": "inTeam"})]
 
 
 def test_ingest_teams_maps_team():
@@ -78,7 +76,7 @@ def test_ingest_teams_maps_team():
     )
     assert res == {"nodes": 1, "edges": 0}
     node = c.txn.nodes["mattermost:team:T1"]
-    assert node["type"] == "Team"
+    assert node["node_type"] == "Team"
     assert node["displayName"] == "Engineering"
     assert node["teamType"] == "O"
     assert node["externalToolId"] == "T1"
@@ -102,11 +100,11 @@ def test_ingest_channels_maps_channel_and_team_link():
     )
     assert res == {"nodes": 1, "edges": 1}
     node = c.txn.nodes["mattermost:channel:C1"]
-    assert node["type"] == "Channel"
+    assert node["node_type"] == "Channel"
     assert node["channelType"] == "O"
     assert node["purpose"] == "ci/cd"
-    assert c.edges.edges == [
-        ("mattermost:channel:C1", "mattermost:team:T1", {"type": "inTeam"})
+    assert c.txn.edges == [
+        ("mattermost:channel:C1", "mattermost:team:T1", {"relationship": "inTeam"})
     ]
 
 
@@ -121,9 +119,9 @@ def test_ingest_users_maps_person_and_bot():
         graph="__commons__",
     )
     assert res == {"nodes": 2, "edges": 0}
-    assert c.txn.nodes["mattermost:user:U1"]["type"] == "Person"
+    assert c.txn.nodes["mattermost:user:U1"]["node_type"] == "Person"
     assert c.txn.nodes["mattermost:user:U1"]["name"] == "Alice A"
-    assert c.txn.nodes["mattermost:user:B1"]["type"] == "Bot"
+    assert c.txn.nodes["mattermost:user:B1"]["node_type"] == "Bot"
 
 
 def test_ingest_posts_maps_document_and_links():
@@ -146,23 +144,23 @@ def test_ingest_posts_maps_document_and_links():
     # empty-message post skipped; 2 documents, links: 2 channel + 2 author + 1 reply
     assert res == {"nodes": 2, "edges": 5}
     doc = c.txn.nodes["mattermost:post:P1"]
-    assert doc["type"] == "Document"
+    assert doc["node_type"] == "Document"
     assert doc["text"] == "hello world"
     assert (
         "mattermost:post:P1",
         "mattermost:channel:C1",
-        {"type": "postedInChannel"},
-    ) in c.edges.edges
+        {"relationship": "postedInChannel"},
+    ) in c.txn.edges
     assert (
         "mattermost:post:P1",
         "mattermost:user:U1",
-        {"type": "authoredBy"},
-    ) in c.edges.edges
+        {"relationship": "authoredBy"},
+    ) in c.txn.edges
     assert (
         "mattermost:post:P2",
         "mattermost:post:P1",
-        {"type": "repliesTo"},
-    ) in c.edges.edges
+        {"relationship": "repliesTo"},
+    ) in c.txn.edges
 
 
 def test_ingest_documents_skips_textless():
@@ -173,15 +171,14 @@ def test_ingest_documents_skips_textless():
         graph="__commons__",
     )
     assert res == {"nodes": 1, "edges": 0}
-    assert c.txn.nodes["d1"]["type"] == "Document"
+    assert c.txn.nodes["d1"]["node_type"] == "Document"
 
 
-def test_ingest_noops_without_engine():
-    # No injected client + no reachable engine -> clean no-op.
-    assert ingest_entities([{"id": "a", "type": "Team"}]) is None
+def test_retired_structural_alias_is_rejected():
+    with pytest.raises(NativeIngestError, match="canonical node_type"):
+        ingest_entities([{"id": "a", "type": "Team"}], client=_FakeClient())
 
 
-def test_ingest_empty_is_noop():
-    assert ingest_entities([], client=_FakeClient()) is None
-    assert ingest_teams([], client=_FakeClient()) is None
-    assert ingest_posts([], client=_FakeClient()) is None
+def test_empty_native_ingest_is_rejected():
+    with pytest.raises(NativeIngestError, match="at least one entity"):
+        ingest_entities([], client=_FakeClient())

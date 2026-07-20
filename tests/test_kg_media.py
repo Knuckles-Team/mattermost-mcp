@@ -1,11 +1,14 @@
 """Native epistemic-graph blob ingestion for Mattermost attachments — Wire-First coverage.
 
 Exercises ``ingest_file_attachment`` with a fake MediaStore (no engine required),
-asserting the store_media call, media-type derivation, and clean no-op paths.
+asserting the store_media call, media-type derivation, and strict input failures.
 CONCEPT:AU-KG.ingest.list-durable-media.
 """
 
 from __future__ import annotations
+
+import pytest
+from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
 
 from mattermost_mcp.kg_media import ingest_file_attachment
 
@@ -60,11 +63,17 @@ def test_ingest_attachment_defaults_to_file_type():
     assert res["media_type"] == "file"
 
 
-def test_ingest_attachment_noop_without_bytes():
-    assert ingest_file_attachment(b"", info={"id": "F3"}, store=_FakeStore()) is None
-    assert ingest_file_attachment(None, store=_FakeStore()) is None
+def test_ingest_attachment_rejects_empty_bytes():
+    with pytest.raises(NativeIngestError, match="non-empty bytes"):
+        ingest_file_attachment(b"", info={"id": "F3"}, store=_FakeStore())
+    with pytest.raises(NativeIngestError, match="non-empty bytes"):
+        ingest_file_attachment(None, store=_FakeStore())
 
 
-def test_ingest_attachment_noop_without_store():
-    # No injected store + no reachable engine -> clean no-op.
-    assert ingest_file_attachment(b"data", info={"id": "F4"}) is None
+def test_ingest_attachment_propagates_store_failure():
+    class _FailingStore:
+        def store_media(self, *_args, **_kwargs):
+            raise RuntimeError("unavailable")
+
+    with pytest.raises(NativeIngestError, match="transaction failed"):
+        ingest_file_attachment(b"data", info={"id": "F4"}, store=_FailingStore())

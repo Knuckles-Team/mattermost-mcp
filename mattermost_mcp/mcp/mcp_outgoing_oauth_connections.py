@@ -33,7 +33,7 @@ def register_outgoing_oauth_connections_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {"error": "Invalid params_json: " + str(e)}
+            return {"error": "Invalid params_json"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
@@ -52,5 +52,5 @@ def register_outgoing_oauth_connections_tools(mcp: FastMCP):
             return res
         except Exception as e:
             return {
-                "error": "Failed to execute operation " + str(action) + ": " + str(e)
+                "error": "Operation failed"
             }

@@ -1,0 +1,9 @@
+{
+  "algorithm": "agent-utilities:mcp-tool-schema-compat:v1",
+  "connector": "mattermost-mcp",
+  "schema_version": "1",
+  "tools": {
+    "mattermost_mcp_channels": "3d902155dd8368ab24efbf0b8d18f4fdb50053e943a7dfb294032e58de6a4a36",
+    "mattermost_mcp_teams": "360d48a2ef75a69e692004d092c812db4dfece974dd5f41a7499430713494b76"
+  }
+}

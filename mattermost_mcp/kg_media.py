@@ -6,16 +6,20 @@ metadata) in ONE cross-modal ACID commit, via the agent-utilities ``MediaStore``
 makes the raw attachment bytes — not just a file id — durable, deduped and queryable
 inside the knowledge graph, and lets a message ``:Document`` link to it via ``:hasAttachment``.
 
-Entirely best-effort and dependency-guarded: if agent-utilities' KG stack or a live engine
-is absent, every entry point **no-ops** (returns ``None``), so the connector keeps working
-with zero KG infrastructure. Pairs with :mod:`mattermost_mcp.kg_ingest` (typed nodes +
-message documents).
+The authoritative ``native_ingest.media_store`` dependency is required. Missing engine
+capability, empty bytes, and storage failures are explicit ``NativeIngestError`` failures.
+Pairs with :mod:`mattermost_mcp.kg_ingest` (typed nodes + message documents).
 """
 
 from __future__ import annotations
 
 import logging
 from typing import Any
+
+from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    media_store as _native_media_store,
+)
 
 logger = logging.getLogger("mattermost_mcp.kg_media")
 
@@ -36,34 +40,9 @@ _INFO_FIELDS = (
 )
 
 
-def media_store() -> Any | None:
-    """Return a :class:`MediaStore` over a live engine, or ``None`` when unavailable."""
-    # Prefer the shared native-ingest primitive when installed.
-    try:
-        from agent_utilities.knowledge_graph.memory.native_ingest import (
-            media_store as _shared_store,
-        )
-
-        return _shared_store()
-    except Exception as e:  # noqa: BLE001 — primitive absent; self-contained path
-        logger.debug("native_ingest.media_store absent (%s); local resolver", e)
-    try:
-        from agent_utilities.knowledge_graph.core.graph_compute import (
-            GraphComputeEngine,
-        )
-        from agent_utilities.knowledge_graph.memory.media_store import MediaStore
-    except Exception as e:  # noqa: BLE001 — KG stack absent
-        logger.debug("KG media ingest unavailable (import): %s", e)
-        return None
-    try:
-        engine = GraphComputeEngine()
-        if getattr(engine, "_client", None) is None:
-            logger.debug("KG media ingest: no live engine client")
-            return None
-        return MediaStore(engine)
-    except Exception as e:  # noqa: BLE001 — no reachable engine
-        logger.debug("KG media ingest: engine unreachable: %s", e)
-        return None
+def media_store() -> Any:
+    """Return the authoritative native media store."""
+    return _native_media_store()
 
 
 def ingest_file_attachment(
@@ -72,19 +51,16 @@ def ingest_file_attachment(
     info: dict[str, Any] | None = None,
     source: str = _SOURCE,
     store: Any | None = None,
-) -> dict[str, Any] | None:
+) -> dict[str, Any]:
     """Store a Mattermost attachment as a blob + ``:MediaAsset`` in the knowledge graph.
 
     ``data``: raw file bytes (e.g. from ``get_file``). ``info``: the Mattermost FileInfo
-    record. Returns ``{asset_id, digest, size_bytes, media_type}`` on success, or ``None``
-    when there is no engine / no bytes / the store failed (never raises). ``store`` may be
-    injected (tests); otherwise one is built on demand.
+    record. Returns ``{asset_id, digest, size_bytes, media_type}``; invalid input or a
+    storage failure raises :class:`NativeIngestError`. ``store`` may be injected in tests.
     """
     if not data:
-        return None
+        raise NativeIngestError("native media ingest requires non-empty bytes")
     st = store if store is not None else media_store()
-    if st is None:
-        return None
 
     info = info or {}
     mime = info.get("mime_type") or "application/octet-stream"
@@ -109,11 +85,10 @@ def ingest_file_attachment(
             name=name,
             extra=extra,
         )
-    except Exception as e:  # noqa: BLE001 — engine/store failure is non-fatal
-        logger.warning("KG media ingest: store_media failed: %s", e)
-        return None
+    except Exception as exc:  # noqa: BLE001 - preserve retryable cause privately
+        raise NativeIngestError("native media ingest transaction failed") from exc
     if stored is None:
-        return None
+        raise NativeIngestError("native media ingest was not committed")
 
     asset_id = getattr(stored, "asset_id", None)
     digest = getattr(stored, "digest", "") or ""

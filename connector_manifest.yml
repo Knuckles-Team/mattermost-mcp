@@ -86,6 +86,7 @@ sync:
   updated_field: update_at
   pagination: page
   doc_type: channel
+  tool_schema_sha256: 3d902155dd8368ab24efbf0b8d18f4fdb50053e943a7dfb294032e58de6a4a36
   raw:
     server: mattermost-mcp
     tool: mattermost_mcp_channels
@@ -111,6 +112,7 @@ sync:
   updated_field: update_at
   pagination: page
   doc_type: team
+  tool_schema_sha256: 360d48a2ef75a69e692004d092c812db4dfece974dd5f41a7499430713494b76
   raw:
     server: mattermost-mcp
     tool: mattermost_mcp_teams
@@ -127,16 +129,19 @@ sync:
     doc_type: team
 provenance:
   generated_by: scripts/generate_connector_manifests.py
-  generated_at: '2026-07-09T00:00:00Z'
+  generated_at: '2026-07-18T00:00:00Z'
   source_artifacts:
   - mattermost_mcp/connectors/mcp_source_presets.json
+  - mattermost_mcp/connectors/tool_schema_fingerprints.json
   - mattermost_mcp/ontology/mattermost.ttl
   integrity:
     algorithm: urdna2015-sha256
     hash: 523e80a3a8db0f56473f667276fcfc58ce5858bd3ebffb31284d3f11a22cf117
     triple_count: 39
   signer: ontology-manifest-generator
-  signature: 7d65e20326a1d11406dfa0161f30c3b7ef04b00704884b8fdddc10c2c12cad3d
+  signature_algorithm: ed25519
+  signing_public_key: q0Cp7bmQMqJhbofGKKw8xXC6KbFzukBDDke0UYVi8y4
+  signature: GKk86YZcZDpMKhDDhqtthcSQ9UKPGUQ6aDHVvi1dH1DcTlsuWHDn_ZeVVMaboYSvnB1x0OvJK5h5ABqweDbcBw
 policy:
   pii_fields: {}
   tenant_boundary: null
