@@ -1,5 +1,6 @@
 ---
 name: mattermost-mcp-operations
+skill_type: skill
 description: >-
   Operate mattermost-mcp through its governed MCP and GraphOS capabilities, including mattermost channel messaging, mattermost kg ingestion, mattermost team administration. Use when a request requires this provider's read, change, automation, ingestion, troubleshooting, or evidence workflows.
 ---
