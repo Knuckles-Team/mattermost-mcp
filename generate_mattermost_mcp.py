@@ -8,7 +8,8 @@ source_dir = os.environ.get("MATTERMOST_OPENAPI_SOURCE")
 if not source_dir:
     raise SystemExit("MATTERMOST_OPENAPI_SOURCE must reference the OpenAPI source")
 package_dir = os.environ.get(
-    "MATTERMOST_MCP_PACKAGE_DIR", str(Path(__file__).resolve().parent / "mattermost_mcp")
+    "MATTERMOST_MCP_PACKAGE_DIR",
+    str(Path(__file__).resolve().parent / "mattermost_mcp"),
 )
 api_dir = os.path.join(package_dir, "api")
 mcp_dir = os.path.join(package_dir, "mcp")

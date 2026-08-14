@@ -30,7 +30,7 @@ def register_exports_tools(mcp: FastMCP):
 
         try:
             kwargs = json.loads(params_json)
-        except Exception as e:
+        except Exception:
             return {"error": "Invalid params_json"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
@@ -48,7 +48,5 @@ def register_exports_tools(mcp: FastMCP):
             if res is None:
                 return {"status": "success"}
             return res
-        except Exception as e:
-            return {
-                "error": "Operation failed"
-            }
+        except Exception:
+            return {"error": "Operation failed"}
