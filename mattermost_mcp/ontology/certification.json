@@ -1,7 +1,7 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "3c87ce51fbfaa0597fb80933bda00f4639d94d258c0b5ed04ebd3f908e762775",
+    "connector_manifest.yml": "5a121cdf61e465441bfdb1a1fd0a1bd58e7e82e25628d0a81b8f0d22a9157099",
     "mattermost_mcp/connectors/mcp_source_presets.json": "0378b338bd67a44cef30aa1908a173e463087e9ff34ad704e2391a100690c8a4",
     "mattermost_mcp/connectors/tool_schema_fingerprints.json": "0e8332844622d1b1533fbd2b6dc26e8b5401d3e243ef0e71a25722d69589c72b",
     "mattermost_mcp/ontology/fixtures/records.json": "c365524c500b86942598e622458adb86329043623070866987430f794a8b034b",
@@ -18,9 +18,9 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.4.0,<3",
+    "agent_utilities": ">=2.5.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.26.0,<3"
+    "epistemic_graph": ">=2.27.0,<3"
   },
   "connector": "mattermost-mcp",
   "kind": "ConnectorSourceAttestation",
@@ -32,5 +32,5 @@
   "signer": "UNSIGNED-PREVIEW",
   "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-08-21T04:30:39Z"
+  "validated_at": "2026-08-26T13:42:55Z"
 }
