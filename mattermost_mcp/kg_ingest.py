@@ -159,6 +159,65 @@ def ingest_users(
     return ingest_entities(entities, client=client, graph=graph)
 
 
+def _post_document(pid: str, message: str, cid: str | None, uid: str | None) -> dict[str, Any]:
+    return {
+        "id": f"mattermost:post:{pid}",
+        "text": message,
+        "title": message[:80],
+        "messageType": "",
+        "source_uri": f"mattermost:post:{pid}",
+        "channel_id": cid,
+        "user_id": uid,
+        "externalToolId": str(pid),
+    }
+
+
+def _post_relationships(
+    pid: str, cid: str | None, uid: str | None, root_id: str | None
+) -> list[dict[str, Any]]:
+    relationships: list[dict[str, Any]] = []
+    if cid:
+        relationships.append(
+            {
+                "source": f"mattermost:post:{pid}",
+                "target": f"mattermost:channel:{cid}",
+                "relationship": "postedInChannel",
+            }
+        )
+    if uid:
+        relationships.append(
+            {
+                "source": f"mattermost:post:{pid}",
+                "target": f"mattermost:user:{uid}",
+                "relationship": "authoredBy",
+            }
+        )
+    if root_id and root_id != pid:
+        relationships.append(
+            {
+                "source": f"mattermost:post:{pid}",
+                "target": f"mattermost:post:{root_id}",
+                "relationship": "repliesTo",
+            }
+        )
+    return relationships
+
+
+def _post_to_document(
+    post: dict[str, Any], channel_id: str | None
+) -> tuple[dict[str, Any], list[dict[str, Any]]] | None:
+    pid = post.get("id")
+    message = post.get("message")
+    if not pid or not message:
+        return None
+    cid = post.get("channel_id") or channel_id
+    uid = post.get("user_id")
+    document = _post_document(pid, message, cid, uid)
+    document["messageType"] = post.get("type") or ""
+    relationships = _post_relationships(pid, cid, uid, post.get("root_id"))
+    return document, relationships
+
+
 def ingest_posts(
     posts: list[dict[str, Any]],
     *,
@@ -175,47 +234,10 @@ def ingest_posts(
     documents: list[dict[str, Any]] = []
     relationships: list[dict[str, Any]] = []
     for post in posts or []:
-        pid = post.get("id")
-        message = post.get("message")
-        if not pid or not message:
+        mapped = _post_to_document(post, channel_id)
+        if mapped is None:
             continue
-        cid = post.get("channel_id") or channel_id
-        uid = post.get("user_id")
-        documents.append(
-            {
-                "id": f"mattermost:post:{pid}",
-                "text": message,
-                "title": message[:80],
-                "messageType": post.get("type") or "",
-                "source_uri": f"mattermost:post:{pid}",
-                "channel_id": cid,
-                "user_id": uid,
-                "externalToolId": str(pid),
-            }
-        )
-        if cid:
-            relationships.append(
-                {
-                    "source": f"mattermost:post:{pid}",
-                    "target": f"mattermost:channel:{cid}",
-                    "relationship": "postedInChannel",
-                }
-            )
-        if uid:
-            relationships.append(
-                {
-                    "source": f"mattermost:post:{pid}",
-                    "target": f"mattermost:user:{uid}",
-                    "relationship": "authoredBy",
-                }
-            )
-        root_id = post.get("root_id")
-        if root_id and root_id != pid:
-            relationships.append(
-                {
-                    "source": f"mattermost:post:{pid}",
-                    "target": f"mattermost:post:{root_id}",
-                    "relationship": "repliesTo",
-                }
-            )
+        document, post_relationships = mapped
+        documents.append(document)
+        relationships.extend(post_relationships)
     return ingest_documents(documents, relationships, client=client, graph=graph)

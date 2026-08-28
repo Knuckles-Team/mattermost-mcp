@@ -45,6 +45,45 @@ def media_store() -> Any:
     return _native_media_store()
 
 
+_MIME_PREFIX_TO_MEDIA_TYPE = (
+    ("image", "image"),
+    ("video", "video"),
+    ("audio", "audio"),
+)
+
+
+def _media_type_for_mime(mime: str) -> str:
+    for prefix, media_type in _MIME_PREFIX_TO_MEDIA_TYPE:
+        if mime.startswith(prefix):
+            return media_type
+    return "file"
+
+
+def _store_attachment(
+    st: Any,
+    data: bytes,
+    media_type: str,
+    mime: str,
+    source: str,
+    name: str,
+    extra: dict[str, Any],
+) -> Any:
+    try:
+        stored = st.store_media(
+            data,
+            media_type=media_type,
+            mime_type=mime,
+            source=source,
+            name=name,
+            extra=extra,
+        )
+    except Exception as exc:  # noqa: BLE001 - preserve retryable cause privately
+        raise NativeIngestError("native media ingest transaction failed") from exc
+    if stored is None:
+        raise NativeIngestError("native media ingest was not committed")
+    return stored
+
+
 def ingest_file_attachment(
     data: bytes | None,
     *,
@@ -64,31 +103,12 @@ def ingest_file_attachment(
 
     info = info or {}
     mime = info.get("mime_type") or "application/octet-stream"
-    if mime.startswith("image"):
-        media_type = "image"
-    elif mime.startswith("video"):
-        media_type = "video"
-    elif mime.startswith("audio"):
-        media_type = "audio"
-    else:
-        media_type = "file"
+    media_type = _media_type_for_mime(mime)
 
     extra = {k: info[k] for k in _INFO_FIELDS if info.get(k) is not None}
     name = info.get("name") or info.get("id") or "attachment"
 
-    try:
-        stored = st.store_media(
-            data,
-            media_type=media_type,
-            mime_type=mime,
-            source=source,
-            name=name,
-            extra=extra,
-        )
-    except Exception as exc:  # noqa: BLE001 - preserve retryable cause privately
-        raise NativeIngestError("native media ingest transaction failed") from exc
-    if stored is None:
-        raise NativeIngestError("native media ingest was not committed")
+    stored = _store_attachment(st, data, media_type, mime, source, name, extra)
 
     asset_id = getattr(stored, "asset_id", None)
     digest = getattr(stored, "digest", "") or ""
