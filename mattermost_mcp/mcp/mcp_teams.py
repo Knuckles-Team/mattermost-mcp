@@ -1,3 +1,5 @@
+from typing import Literal
+
 """
 This file was automatically generated. Do not edit manually.
 """
@@ -14,7 +16,44 @@ def register_teams_tools(mcp: FastMCP):
 
     @mcp.tool(tags=["teams"])
     async def mattermost_mcp_teams(
-        action: str = Field(
+        action: Literal[
+            "add_team_member",
+            "add_team_member_from_invite",
+            "add_team_members",
+            "create_team",
+            "get_all_teams",
+            "get_team",
+            "get_team_by_name",
+            "get_team_icon",
+            "get_team_invite_info",
+            "get_team_member",
+            "get_team_members",
+            "get_team_members_by_ids",
+            "get_team_members_for_user",
+            "get_team_stats",
+            "get_team_unread",
+            "get_teams_for_user",
+            "get_teams_unread_for_user",
+            "import_team",
+            "invalidate_email_invites",
+            "invite_guests_to_team",
+            "invite_users_to_team",
+            "patch_team",
+            "regenerate_team_invite_id",
+            "remove_team_icon",
+            "remove_team_member",
+            "restore_team",
+            "search_teams",
+            "set_team_icon",
+            "soft_delete_team",
+            "team_exists",
+            "team_members_minus_group_members",
+            "update_team",
+            "update_team_member_roles",
+            "update_team_member_scheme_roles",
+            "update_team_privacy",
+            "update_team_scheme",
+        ] = Field(
             description="Action to perform. Must be one of: 'get_all_teams', 'create_team', 'get_team', 'update_team', 'soft_delete_team', 'patch_team', 'update_team_privacy', 'restore_team', 'get_team_by_name', 'search_teams', 'team_exists', 'get_teams_for_user', 'get_team_members', 'add_team_member', 'add_team_member_from_invite', 'add_team_members', 'get_team_members_for_user', 'get_team_member', 'remove_team_member', 'get_team_members_by_ids', 'get_team_stats', 'regenerate_team_invite_id', 'get_team_icon', 'set_team_icon', 'remove_team_icon', 'update_team_member_roles', 'update_team_member_scheme_roles', 'get_teams_unread_for_user', 'get_team_unread', 'invite_users_to_team', 'invite_guests_to_team', 'invalidate_email_invites', 'import_team', 'get_team_invite_info', 'update_team_scheme', 'team_members_minus_group_members'"
         ),
         params_json: str = Field(

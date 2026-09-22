@@ -1,9 +1,9 @@
 {
-  "algorithm": "agent-utilities:mcp-tool-schema-compat:v1",
+  "algorithm": "agent-connector-sdk:mcp-tool-contract-compat:v2",
   "connector": "mattermost-mcp",
   "schema_version": "1",
   "tools": {
-    "mattermost_mcp_channels": "3d902155dd8368ab24efbf0b8d18f4fdb50053e943a7dfb294032e58de6a4a36",
-    "mattermost_mcp_teams": "360d48a2ef75a69e692004d092c812db4dfece974dd5f41a7499430713494b76"
+    "mattermost_mcp_channels": "3d93eed289defa55e0d3b1a115642fa2b75c46c919b85c0d451679bfa8abdd86",
+    "mattermost_mcp_teams": "fc5c3c4737b2fcb7f7746632a8cffa440245c0966ee20b8fbd87dccacf9561a0"
   }
 }
