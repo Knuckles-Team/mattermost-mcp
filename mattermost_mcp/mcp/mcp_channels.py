@@ -14,7 +14,18 @@ from mattermost_mcp.auth import get_client
 def register_channels_tools(mcp: FastMCP):
     """Register Mattermost MCP channels tools."""
 
-    @mcp.tool(tags=["channels"])
+    @mcp.tool(
+        tags=["channels"],
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": True,
+            "idempotentHint": False,
+            "openWorldHint": True,
+        },
+        meta={
+            "eg.annotations": {"modalities_in": ["text"], "modalities_out": ["text"]}
+        },
+    )
     async def mattermost_mcp_channels(
         action: Literal[
             "add_channel_member",

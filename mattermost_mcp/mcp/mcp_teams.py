@@ -14,7 +14,18 @@ from mattermost_mcp.auth import get_client
 def register_teams_tools(mcp: FastMCP):
     """Register Mattermost MCP teams tools."""
 
-    @mcp.tool(tags=["teams"])
+    @mcp.tool(
+        tags=["teams"],
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": True,
+            "idempotentHint": False,
+            "openWorldHint": True,
+        },
+        meta={
+            "eg.annotations": {"modalities_in": ["text"], "modalities_out": ["text"]}
+        },
+    )
     async def mattermost_mcp_teams(
         action: Literal[
             "add_team_member",
