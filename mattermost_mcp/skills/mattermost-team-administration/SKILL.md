@@ -4,7 +4,7 @@ skill_type: skill
 description: >-
   Administer Mattermost teams and channels via the mattermost-mcp MCP server —
   list/create teams, list/create/rename/archive channels, set channel privacy, and
-  manage team & channel membership with the domain-typed condensed tools. Use when
+  manage team and channel membership with the domain-typed condensed tools. Use when
   the agent must provision a channel, resolve a channel or team by name, add/remove
   members, or read team/channel stats. Do NOT use to read or post messages
   (mattermost-channel-messaging) or to ingest structure into the knowledge graph
