@@ -212,7 +212,7 @@ mattermost-agent --mcp-url http://localhost:8000/mcp --host 0.0.0.0 --port 9035 
 
 ## Behind a Caddy reverse proxy
 
-Expose the HTTP server on a hostname with automatic TLS. Add to your `Caddyfile`:
+Expose the HTTP server on a hostname with automatic TLS. Add to the operator's `Caddyfile`:
 
 ```caddy
 # Internal (self-signed) — homelab .example.invalid zone
@@ -256,7 +256,7 @@ this as a tool.
 
 ## Register with an MCP client
 
-Add to your client's `mcp_config.json` (multiplexer nickname `mm`):
+Add to the operator's client's `mcp_config.json` (multiplexer nickname `mm`):
 
 ```json
 {

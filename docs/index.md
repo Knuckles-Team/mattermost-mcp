@@ -25,14 +25,14 @@ and exposes it as both an MCP server and an optional Pydantic-AI agent. It provi
 - **A Pydantic-AI agent** (`mattermost-agent`) that consumes the MCP server and can
   serve a web UI for conversational operations.
 
-The package connects to Mattermost when credentials are supplied and remains inactive
+The package connects to Mattermost when credentials are provided and remains inactive
 when those credentials are absent.
 
 ## Explore the documentation
 
 <div class="grid cards" markdown>
 
-- :material-rocket-launch: **[Installation](installation.md)** — pip, source, extras, and the prebuilt Docker image.
+- :material-rocket-start: **[Installation](installation.md)** — pip, source, extras, and the prebuilt Docker image.
 - :material-server-network: **[Deployment](deployment.md)** — run the MCP server and agent, Docker Compose, Caddy + Technitium.
 - :material-console: **[Usage](usage.md)** — the MCP tools, the `Api` client, and the CLI.
 - :material-database-cog: **[Backing Platform](platform.md)** — deploy Mattermost with Docker.

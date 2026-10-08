@@ -1,7 +1,7 @@
 # Usage — API / CLI / MCP
 
 `mattermost-mcp` exposes the same capability three ways: as **MCP tools** an agent
-calls, as a **Python API** (`Api`) you import, and as a **CLI**. The conceptual model
+calls, as a **Python API** (`Api`) the operator import, and as a **CLI**. The conceptual model
 and the dynamic-facade architecture are described in [Overview](overview.md).
 
 ## As an MCP server
