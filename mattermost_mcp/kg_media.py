@@ -2,29 +2,34 @@
 
 CONCEPT:AU-KG.ingest.list-durable-media. Files uploaded to Mattermost posts are stored
 as content-addressed **blobs** with a ``:MediaAsset`` graph node (carrying the file-info
-metadata) in ONE cross-modal ACID commit, via the agent-utilities ``MediaStore``. This
-makes the raw attachment bytes — not just a file id — durable, deduped and queryable
-inside the knowledge graph, and lets a message ``:Document`` link to it via ``:hasAttachment``.
+metadata), via the ``agent_connector_sdk.ingest`` knowledge-ingest facade. This makes the
+raw attachment bytes — not just a file id — durable, deduped and queryable inside the
+knowledge graph.
 
-The authoritative ``native_ingest.media_store`` dependency is required. Missing engine
-capability, empty bytes, and storage failures are explicit ``NativeIngestError`` failures.
-Pairs with :mod:`mattermost_mcp.kg_ingest` (typed nodes + message documents).
+Missing engine capability, empty bytes, and storage failures are explicit ``IngestError``
+failures. Pairs with :mod:`mattermost_mcp.kg_ingest` (typed nodes + message documents).
 """
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    media_store as _native_media_store,
+from agent_connector_sdk.ingest import (
+    ChangeSet,
+    IngestBinding,
+    IngestError,
+    KnowledgeIngest,
+    MediaAsset,
+    current_ingest,
 )
 
 logger = logging.getLogger("mattermost_mcp.kg_media")
 
 _SOURCE = "mattermost-mcp"
 _DOMAIN = "mattermost"
+_BINDING = IngestBinding(connector=_SOURCE, stream=_DOMAIN)
 
 # Mattermost FileInfo keys worth carrying onto the :MediaAsset node.
 _INFO_FIELDS = (
@@ -38,12 +43,6 @@ _INFO_FIELDS = (
     "channel_id",
     "create_at",
 )
-
-
-def media_store() -> Any:
-    """Return the authoritative native media store."""
-    return _native_media_store()
-
 
 _MIME_PREFIX_TO_MEDIA_TYPE = (
     ("image", "image"),
@@ -59,59 +58,44 @@ def _media_type_for_mime(mime: str) -> str:
     return "file"
 
 
-def _store_attachment(
-    st: Any,
-    data: bytes,
-    media_type: str,
-    mime: str,
-    source: str,
-    name: str,
-    extra: dict[str, Any],
-) -> Any:
-    try:
-        stored = st.store_media(
-            data,
-            media_type=media_type,
-            mime_type=mime,
-            source=source,
-            name=name,
-            extra=extra,
-        )
-    except Exception as exc:  # noqa: BLE001 - preserve retryable cause privately
-        raise NativeIngestError("native media ingest transaction failed") from exc
-    if stored is None:
-        raise NativeIngestError("native media ingest was not committed")
-    return stored
-
-
-def ingest_file_attachment(
+async def ingest_file_attachment(
     data: bytes | None,
     *,
     info: dict[str, Any] | None = None,
     source: str = _SOURCE,
-    store: Any | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, Any]:
     """Store a Mattermost attachment as a blob + ``:MediaAsset`` in the knowledge graph.
 
     ``data``: raw file bytes (e.g. from ``get_file``). ``info``: the Mattermost FileInfo
     record. Returns ``{asset_id, digest, size_bytes, media_type}``; invalid input or a
-    storage failure raises :class:`NativeIngestError`. ``store`` may be injected in tests.
+    storage failure raises :class:`IngestError`. ``ingest`` may be injected in tests.
     """
     if not data:
-        raise NativeIngestError("native media ingest requires non-empty bytes")
-    st = store if store is not None else media_store()
+        raise IngestError("native media ingest requires non-empty bytes")
 
     info = info or {}
     mime = info.get("mime_type") or "application/octet-stream"
     media_type = _media_type_for_mime(mime)
-
-    extra = {k: info[k] for k in _INFO_FIELDS if info.get(k) is not None}
     name = info.get("name") or info.get("id") or "attachment"
 
-    stored = _store_attachment(st, data, media_type, mime, source, name, extra)
+    digest = hashlib.sha256(data).hexdigest()
+    asset_id = f"blob:{digest}"
+    extra = {k: info[k] for k in _INFO_FIELDS if info.get(k) is not None}
+    extra["media_type"] = media_type
+    extra["source"] = source
 
-    asset_id = getattr(stored, "asset_id", None)
-    digest = getattr(stored, "digest", "") or ""
+    asset = MediaAsset(data=data, mime_type=mime, id=asset_id, name=name, properties=extra)
+    change_set = ChangeSet(media=(asset,))
+    service = ingest or current_ingest()
+
+    try:
+        await service.submit(_BINDING, change_set)
+    except IngestError:
+        raise
+    except Exception as exc:  # noqa: BLE001 - preserve retryable cause privately
+        raise IngestError("native media ingest transaction failed") from exc
+
     logger.info(
         "KG media ingest: stored %s (%s bytes) as asset %s digest %s",
         name,

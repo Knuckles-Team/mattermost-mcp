@@ -58,7 +58,7 @@ def register_kg_tools(mcp: FastMCP):
         if ctx:
             await ctx.info("Ingesting Mattermost teams...")
         teams = _records(client.get_all_teams(**kwargs))
-        return {"listed": len(teams), "ingested": ingest_teams(teams)}
+        return {"listed": len(teams), "ingested": await ingest_teams(teams)}
 
     @mcp.tool(tags=["kg", "misc"])
     async def mattermost_ingest_channels(
@@ -81,7 +81,7 @@ def register_kg_tools(mcp: FastMCP):
         if ctx:
             await ctx.info(f"Ingesting channels for team {team_id}...")
         channels = _records(client.get_public_channels_for_team(team_id, **kwargs))
-        return {"listed": len(channels), "ingested": ingest_channels(channels)}
+        return {"listed": len(channels), "ingested": await ingest_channels(channels)}
 
     @mcp.tool(tags=["kg", "misc"])
     async def mattermost_ingest_users(
@@ -103,7 +103,7 @@ def register_kg_tools(mcp: FastMCP):
         if ctx:
             await ctx.info("Ingesting Mattermost users...")
         users = _records(client.get_users(**kwargs))
-        return {"listed": len(users), "ingested": ingest_users(users)}
+        return {"listed": len(users), "ingested": await ingest_users(users)}
 
     @mcp.tool(tags=["kg", "misc"])
     async def mattermost_ingest_posts(
@@ -128,7 +128,7 @@ def register_kg_tools(mcp: FastMCP):
         posts = _records(client.get_posts_for_channel(channel_id, **kwargs))
         return {
             "listed": len(posts),
-            "ingested": ingest_posts(posts, channel_id=channel_id),
+            "ingested": await ingest_posts(posts, channel_id=channel_id),
         }
 
     return None
