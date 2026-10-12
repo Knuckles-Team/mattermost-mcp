@@ -40,7 +40,9 @@ class _FakeTransport:
         )
 
     async def store_blob(self, data: bytes) -> str:
-        raise AssertionError("this connector's node/document ingestion carries no media")
+        raise AssertionError(
+            "this connector's node/document ingestion carries no media"
+        )
 
 
 @pytest.fixture

@@ -85,7 +85,9 @@ async def ingest_file_attachment(
     extra["media_type"] = media_type
     extra["source"] = source
 
-    asset = MediaAsset(data=data, mime_type=mime, id=asset_id, name=name, properties=extra)
+    asset = MediaAsset(
+        data=data, mime_type=mime, id=asset_id, name=name, properties=extra
+    )
     change_set = ChangeSet(media=(asset,))
     service = ingest or current_ingest()
 

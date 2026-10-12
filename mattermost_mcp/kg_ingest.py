@@ -33,17 +33,13 @@ def _to_entity(record: dict[str, Any]) -> Entity:
     return Entity(
         id=record.get("id"),
         node_type=record.get("node_type"),
-        properties={
-            k: v for k, v in record.items() if k not in ("id", "node_type")
-        },
+        properties={k: v for k, v in record.items() if k not in ("id", "node_type")},
     )
 
 
 def _to_relationship(record: dict[str, Any]) -> Relationship:
     properties = {
-        k: v
-        for k, v in record.items()
-        if k not in ("source", "target", "relationship")
+        k: v for k, v in record.items() if k not in ("source", "target", "relationship")
     }
     return Relationship(
         source=record["source"],
@@ -199,7 +195,9 @@ async def ingest_users(
     return await ingest_entities(entities, ingest=ingest)
 
 
-def _post_document(pid: str, message: str, cid: str | None, uid: str | None) -> dict[str, Any]:
+def _post_document(
+    pid: str, message: str, cid: str | None, uid: str | None
+) -> dict[str, Any]:
     return {
         "id": f"mattermost:post:{pid}",
         "text": message,
