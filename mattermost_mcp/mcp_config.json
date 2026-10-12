@@ -7,7 +7,6 @@
         "mattermost_mcp.mcp_server"
       ],
       "env": {
-        "MCP_TOOL_MODE": "intent",
         "ACCESS_CONTROLTOOL": "True",
         "ACTIONSTOOL": "True",
         "AGENTSTOOL": "True",
@@ -32,10 +31,12 @@
         "IMPORTSTOOL": "True",
         "IP_FILTERSTOOL": "True",
         "JOBSTOOL": "True",
+        "KGTOOL": "True",
         "LDAPTOOL": "True",
         "LIMITSTOOL": "True",
         "LOGSTOOL": "True",
         "MATTERMOST_MCP_BASE_URL": "http://localhost:8065",
+        "MATTERMOST_MCP_PACKAGE_DIR": "./mattermost_mcp",
         "MATTERMOST_MCP_PASSWORD": "mattermost_password",
         "MATTERMOST_MCP_USERNAME": "mattermost_username",
         "MATTERMOST_TOKEN": "mattermost_api_access_token",
