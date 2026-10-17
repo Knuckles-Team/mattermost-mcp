@@ -63,13 +63,10 @@ Store the real remote URL, outbound identity reference, and TLS-profile referenc
 <!-- END GENERATED: deployment-options -->
 
 This page covers running `mattermost-mcp` as a long-lived server: the transports, a
-Docker Compose stack, the companion agent server, putting it behind a Caddy reverse
 proxy, and giving it a DNS name with Technitium. To provision the **Mattermost server**
 it connects to, see [Backing Platform](platform.md).
 
 > `mattermost-mcp` ships both an **MCP server** (console script `mattermost-mcp`) and a
-> **Pydantic-AI agent server** (console script `mattermost-agent`). The MCP server is a
-> typed, deterministic tool surface a policy router / agent calls; the agent server
 > consumes that tool surface and can serve a conversational web UI.
 
 ## Run the MCP server
@@ -150,64 +147,6 @@ services:
 cp .env.example .env          # then edit MATTERMOST_* values
 docker compose -f docker/mcp.compose.yml up -d
 docker compose -f docker/mcp.compose.yml logs -f
-```
-
-## Agent server
-
-`mattermost-mcp` also ships a Pydantic-AI agent (console script `mattermost-agent`)
-that connects to the running MCP server over HTTP and optionally serves a web UI. The
-repo provides [`docker/agent.compose.yml`](https://github.com/Knuckles-Team/mattermost-mcp/blob/main/docker/agent.compose.yml),
-which runs the MCP server and the agent together: the agent reaches the MCP server by
-container name via `MCP_URL` and publishes its own web UI on `:9035`.
-
-```yaml
-services:
-  mattermost-mcp-mcp:
-    image: example/mattermost-mcp@sha256:<digest>
-    container_name: mattermost-mcp-mcp
-    hostname: mattermost-mcp-mcp
-    restart: always
-    env_file:
-      - ../.env
-    environment:
-      - PYTHONUNBUFFERED=1
-      - HOST=0.0.0.0
-      - PORT=8000
-      - TRANSPORT=streamable-http
-    ports:
-      - "8000:8000"
-
-  mattermost-mcp-agent:
-    image: example/mattermost-mcp@sha256:<digest>
-    container_name: mattermost-mcp-agent
-    hostname: mattermost-mcp-agent
-    restart: always
-    depends_on:
-      - mattermost-mcp-mcp
-    env_file:
-      - ../.env
-    command: [ "mattermost-agent" ]
-    environment:
-      - PYTHONUNBUFFERED=1
-      - HOST=0.0.0.0
-      - PORT=9035
-      - MCP_URL=http://mattermost-mcp-mcp:8000/mcp
-      - PROVIDER=${PROVIDER:-openai}
-      - MODEL_ID=${MODEL_ID:-gpt-4o}
-      - ENABLE_WEB_UI=True
-    ports:
-      - "9035:9035"
-```
-
-```bash
-docker compose -f docker/agent.compose.yml up -d
-curl -s http://localhost:9035/health        # agent health
-```
-
-Run the agent directly against an existing MCP server:
-
-```bash
-mattermost-agent --mcp-url http://localhost:8000/mcp --host 0.0.0.0 --port 9035 --web
 ```
 
 ## Behind a Caddy reverse proxy

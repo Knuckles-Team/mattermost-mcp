@@ -77,9 +77,4 @@ mattermost-mcp --help
 
 The companion agent is exposed as `mattermost-agent`:
 
-```bash
-mattermost-agent --mcp-url http://localhost:8000/mcp --host 0.0.0.0 --port 9035 --web
-```
-
-See [Deployment](deployment.md) for the agent server, Docker Compose, reverse proxy,
 and DNS.

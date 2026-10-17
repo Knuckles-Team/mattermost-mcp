@@ -7,7 +7,6 @@
 Mattermost enterprise messaging collaboration server. Built with the highest architectural standards, incorporating dynamic facades, custom API routing, and FastMCP tool decoration.
 
 > **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
-> interfaces, the companion agent server, and guidance for provisioning the Mattermost
 > platform are maintained in the
 > [official documentation](https://knuckles-team.github.io/mattermost-mcp/).
 
@@ -59,7 +58,6 @@ The operator can configure tool filtering via multiple input channels:
 
 When query strings or parameters are provided, an LLM-free **Knowledge Graph resolution layer** (using `DynamicToolOrchestrator`) matches query intents against known tool tags, names, or descriptions, with safe fallback and automated 24-hour background cache refreshing.
 
-
 ---
 
 ## Installation
@@ -69,7 +67,6 @@ Pick the extra that matches what the operator want to run:
 | Extra | Installs | Use when |
 |-------|----------|----------|
 | `mattermost-mcp[mcp]` | Connector-focused MCP server (`agent-connector-sdk` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
-| `mattermost-mcp[agent]` | Agent runtime (`agent-connector-sdk` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
 | `mattermost-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -77,34 +74,28 @@ Pick the extra that matches what the operator want to run:
 uv pip install "mattermost-mcp[mcp]"
 
 # Agent runtime (adds model orchestration to the shared graph engine)
-uv pip install "mattermost-mcp[agent]"
 
 # Everything (development)
 uv pip install "mattermost-mcp[all]"      # or: python -m pip install "mattermost-mcp[all]"
 ```
 
-### Container images (`:mcp` vs `:agent`)
+### Container images (`:mcp`)
 
-One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
 | `example/mattermost-mcp:mcp` | `--target mcp` | `mattermost-mcp[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `mattermost-mcp` |
-| `example/mattermost-mcp@sha256:<digest>` | `--target agent` (default) | `mattermost-mcp[agent]` — **agent runtime**, model orchestration + `epistemic-graph[full]` | `mattermost-agent` |
 
 ```bash
 docker build --target mcp   -t example/mattermost-mcp:mcp    docker/   # connector-focused MCP server
-docker build --target agent -t example/mattermost-mcp:agent-local docker/   # agent runtime
 ```
 
-`docker/mcp.compose.yml` runs the connector-focused `:mcp` server; `docker/agent.compose.yml` runs the
 agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
 
 ### Knowledge-graph database (`epistemic-graph`)
 
-Both `[mcp]` and `[agent]` carry the **epistemic-graph** engine through the required
 Agent Connector SDK core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
-the server connector-focused; `[agent]` also enables model orchestration. Local
 deployments can use the bundled engine. For production or shared state, run
 **epistemic-graph as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
@@ -211,7 +202,6 @@ python -m mattermost_mcp.mcp_server
 | `MATTERMOST_TLS_PROFILE_REF` | — |  |
 | `KGTOOL` | `True` |  |
 | `MATTERMOST_MCP_MCP_IMAGE` | — | Required for the corresponding Compose deployment: image@sha256:digest. |
-| `MATTERMOST_MCP_AGENT_IMAGE` | — |  |
 | `MATTERMOST_OPENAPI_SOURCE` | — | Required when running generate_mattermost_mcp.py. |
 | `MATTERMOST_MCP_PACKAGE_DIR` | `./mattermost_mcp` | Optional output override; when unset, defaults to the repository package directory. |
 
@@ -241,11 +231,9 @@ python -m mattermost_mcp.mcp_server
 | `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
 | `PROVIDER` | — | Operator-configured LLM provider for the agent |
 | `MODEL_ID` | — | Operator-configured model id for the agent |
-| `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
 _68 package + 23 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
-
 
 Every variable the server reads. A local template is provided inside
 [.env.example](.env.example) — copy it to `.env` and fill in the operator's endpoint/credentials.
@@ -272,16 +260,6 @@ Every variable the server reads. A local template is provided inside
 Each action-routed tool can be disabled individually via its toggle env var (set to `false`).
 The full list is in the [MCP Tools](#mcp-tools) table above (e.g. `CHANNELSTOOL`, `POSTSTOOL`,
 `USERSTOOL`, `TEAMSTOOL`).
-
-### Agent CLI (full `[agent]` runtime only)
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `MCP_URL` | URL of the MCP server the agent connects to | `http://localhost:8000/mcp` |
-| `PROVIDER` | LLM provider (e.g. `openai`) | `openai` |
-| `MODEL_ID` | Model id (e.g. `gpt-4o`) | `gpt-4o` |
-| `ENABLE_WEB_UI` | Serve the AG-UI web interface | `True` |
-
----
 
 ## MCP Tools
 
@@ -695,7 +673,6 @@ the recommended reference for installation, deployment, and day-to-day operation
 | [Usage](https://knuckles-team.github.io/mattermost-mcp/usage/) | the MCP tools, the `Api` client, the CLI |
 | [Backing Platform](https://knuckles-team.github.io/mattermost-mcp/platform/) | deploy Mattermost with Docker |
 | [Overview](https://knuckles-team.github.io/mattermost-mcp/overview/) | dynamic facade and FastMCP integration |
-| [Architecture](https://knuckles-team.github.io/mattermost-mcp/architecture/) | dynamic facade, FastMCP, agent server |
 | [Concepts](https://knuckles-team.github.io/mattermost-mcp/concepts/) | concept registry (`CONCEPT:MM-*`) |
 
 ---
@@ -714,7 +691,6 @@ pre-commit run --all-files
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for complete details.
 
-
 <!-- BEGIN agent-connector-sdk-deployment (generated; do not edit between markers) -->
 
 ## Deploy with `agent-connector-sdk-deployment`
@@ -728,7 +704,6 @@ to **"deploy `mattermost-mcp` with agent-connector-sdk-deployment"**.
 | Install mode | Command |
 |------|---------|
 | Installed package | `uv tool install "mattermost-mcp[mcp]"`, then run `mattermost-mcp` |
-| Editable source | `uv pip install -e ".[agent]"`, then run `mattermost-mcp` |
 | Immutable container | deploy `registry.example.invalid/mattermost-mcp@sha256:<digest>` through the operator-selected orchestrator |
 
 The repository embeds no deployment profile, credential value, certificate path, or

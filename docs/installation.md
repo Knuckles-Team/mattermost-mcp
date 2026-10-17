@@ -22,7 +22,6 @@ The base install is intentionally minimal. Install the extra for what the operat
 | Extra | Install | Pulls in |
 |---|---|---|
 | `mcp` | `pip install "mattermost-mcp[mcp]"` | FastMCP MCP-server runtime (`agent-connector-sdk`) |
-| `agent` | `pip install "mattermost-mcp[agent]"` | Pydantic-AI agent + Logfire tracing |
 | `all` | `pip install "mattermost-mcp[all]"` | The MCP server and the agent together |
 | `test` | `pip install "mattermost-mcp[test]"` | `pytest`, `pytest-asyncio`, `pytest-cov`, `pytest-xdist` |
 
@@ -60,7 +59,6 @@ docker run --rm -i \
   example/mattermost-mcp@sha256:<digest>        # stdio transport (default)
 ```
 
-For an HTTP server with a published port, and for the agent server, see
 [Deployment](deployment.md).
 
 ## Verify the install
