@@ -18,7 +18,7 @@ typed OWL nodes, message documents, and attachment blobs. Backed by
 ## When NOT to use
 - Interactive read/post of messages → `mattermost-channel-messaging`.
 - Creating/administering teams and channels → `mattermost-team-administration`.
-- Querying the graph after ingestion → the graph-os KG query tools, not this skill.
+- Querying the graph after ingestion → the arbora KG query tools, not this skill.
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`mattermost-mcp`** MCP server, plus a
@@ -74,7 +74,7 @@ Typical order: `mattermost_ingest_teams` → `mattermost_ingest_channels` (per t
   `mattermost:user:<id>`, `mattermost:post:<id>` — re-ingest MERGEs, never duplicates.
 - Empty / system-only posts (no `message`) are skipped by design.
 - No reachable engine ⇒ `{"ingested": null}` and a clean no-op — check for a live
-  graph-os if you expected writes.
+  arbora if you expected writes.
 - Edges are best-effort: a link to a not-yet-ingested node is silently skipped, so
   ingest teams/channels/users **before** posts.
 - Attachment bytes go through `kg_media.ingest_file_attachment` (`:MediaAsset` blob);
