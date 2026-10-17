@@ -1,6 +1,6 @@
 # mattermost-mcp
 
-Mattermost team-collaboration **API + MCP Server** for the agent-utilities ecosystem
+Mattermost team-collaboration **API + MCP Server** for the agent-connector-sdk ecosystem
 — a typed, deterministic tool surface and Pydantic-AI agent over the Mattermost
 Server v4 REST API.
 

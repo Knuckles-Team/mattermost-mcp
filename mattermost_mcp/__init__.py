@@ -9,7 +9,6 @@ __all__: list[str] = []
 
 CORE_MODULES = ["mattermost_mcp.api_client"]
 OPTIONAL_MODULES = {
-    "mattermost_mcp.agent_server": "agent",
     "mattermost_mcp.mcp_server": "mcp",
 }
 

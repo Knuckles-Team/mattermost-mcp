@@ -21,7 +21,7 @@ The base install is intentionally minimal. Install the extra for what the operat
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| `mcp` | `pip install "mattermost-mcp[mcp]"` | FastMCP MCP-server runtime (`agent-utilities[mcp]`) |
+| `mcp` | `pip install "mattermost-mcp[mcp]"` | FastMCP MCP-server runtime (`agent-connector-sdk`) |
 | `agent` | `pip install "mattermost-mcp[agent]"` | Pydantic-AI agent + Logfire tracing |
 | `all` | `pip install "mattermost-mcp[all]"` | The MCP server and the agent together |
 | `test` | `pip install "mattermost-mcp[test]"` | `pytest`, `pytest-asyncio`, `pytest-cov`, `pytest-xdist` |

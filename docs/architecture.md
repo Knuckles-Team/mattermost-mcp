@@ -1,6 +1,6 @@
 # Architecture
 
-`mattermost-mcp` follows the standardized agent-utilities **dynamic-facade**
+`mattermost-mcp` follows the standardized agent-connector-sdk **dynamic-facade**
 architecture: a multi-inheritance REST client under one `Api` object, a thin FastMCP
 tool layer, and an optional Pydantic-AI agent server that consumes the MCP tools.
 
