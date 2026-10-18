@@ -1,7 +1,7 @@
 # Mattermost MCP
 
 [![Status](https://img.shields.io/badge/status-active-success)](https://github.com/genius-agents/mattermost-mcp)
-[![Version](https://img.shields.io/badge/version-2.4.1-blue)](pyproject.toml)
+[![Version](https://img.shields.io/badge/version-2.4.2-blue)](pyproject.toml)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 Mattermost enterprise messaging collaboration server. Built with the highest architectural standards, incorporating dynamic facades, custom API routing, and FastMCP tool decoration.
@@ -147,7 +147,8 @@ declared in `[tool.pipelines] retired-tools`.
 Types come from the official Mattermost API v4 OpenAPI source
 (`mattermost/mattermost` `api/v4/source`, published at api.mattermost.com) at
 v11.11.1, which is the deployed server's version. A body field whose name is a Python
-keyword (`from`) is exposed as `from_`, and the client sends it as `from`.
+keyword (`from`) keeps its name in the tool schema through a pydantic field alias
+(agent-connector-sdk 0.3.8); the client receives it as `from_` and sends `from`.
 
 <details><summary>Full mapping (53 group tools, 578 actions)</summary>
 

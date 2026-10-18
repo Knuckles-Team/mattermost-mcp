@@ -68,8 +68,9 @@ def python_name(name: str) -> str:
     """The keyword-argument name for a wire field.
 
     A Python keyword (``from``, ``in``...) cannot be a parameter name, so it is
-    exposed as ``<name>_`` and aliased back to the wire name: the client's
-    ``ApiClientBase.request`` restores ``from_`` to ``from`` before sending.
+    declared as ``<name>_``. agent-connector-sdk (0.3.8+) gives that parameter a
+    pydantic field alias of the wire name, so the tool schema shows ``from``; the
+    client's ``ApiClientBase.request`` restores ``from_`` to ``from`` before sending.
     """
     return f"{name}_" if keyword.iskeyword(name) else name
 
