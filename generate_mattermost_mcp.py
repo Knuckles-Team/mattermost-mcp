@@ -325,7 +325,7 @@ from starlette.responses import JSONResponse
 
 {mcp_server_imports_str}
 
-__version__ = "2.2.1"
+__version__ = "2.3.0"
 logger = get_logger(name="mattermost_mcp")
 
 

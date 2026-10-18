@@ -1,6 +1,8 @@
 """Main FastMCP server and tool registration."""
 
+import json
 import sys
+from pathlib import Path
 from typing import Any
 
 from agent_connector_sdk.config import load_config
@@ -71,8 +73,14 @@ from mattermost_mcp.mcp.mcp_users import register_users_tools
 from mattermost_mcp.mcp.mcp_views import register_views_tools
 from mattermost_mcp.mcp.mcp_webhooks import register_webhooks_tools
 
-__version__ = "2.2.1"
+__version__ = "2.3.0"
 logger = get_logger(name="mattermost_mcp")
+
+#: Typed inputs for every client method, generated from the Mattermost OpenAPI
+#: source by scripts/build_operation_manifest.py (path, query and JSON body fields).
+OPERATION_MANIFEST = json.loads(
+    (Path(__file__).with_name("operation_manifest.json")).read_text(encoding="utf-8")
+)
 
 # Keep imported registrars as module attributes so ruff (F401) does not strip
 # them and register_tool_surface auto-discovery (vars(module)) can find them.
@@ -154,6 +162,7 @@ def get_mcp_instance() -> tuple[Any, ...]:
         get_client=get_client,
         service="mattermost-mcp",
         tools_module=sys.modules[__name__],
+        manifest=OPERATION_MANIFEST,
     )
 
     for mw in middlewares:
