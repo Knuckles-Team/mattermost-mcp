@@ -197,6 +197,24 @@ class Api(ApiClientBase):
         url = f"/api/v4/teams/{team_id}/stats"
         return self.request("GET", url, params=kwargs)
 
+    def get_team_access_control_policy(self, team_id: str, **kwargs) -> Any:
+        """Get the access control policy for a team
+
+        Path: /api/v4/teams/{team_id}/access_control/policy
+        Method: GET
+        """
+        url = f"/api/v4/teams/{team_id}/access_control/policy"
+        return self.request("GET", url, params=kwargs)
+
+    def get_team_access_control_attributes(self, team_id: str, **kwargs) -> Any:
+        """Get the access control attributes governing a team
+
+        Path: /api/v4/teams/{team_id}/access_control/attributes
+        Method: GET
+        """
+        url = f"/api/v4/teams/{team_id}/access_control/attributes"
+        return self.request("GET", url, params=kwargs)
+
     def regenerate_team_invite_id(self, team_id: str, **kwargs) -> Any:
         """Regenerate the Invite ID from a Team
 

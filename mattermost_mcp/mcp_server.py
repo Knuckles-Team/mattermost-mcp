@@ -73,7 +73,7 @@ from mattermost_mcp.mcp.mcp_users import register_users_tools
 from mattermost_mcp.mcp.mcp_views import register_views_tools
 from mattermost_mcp.mcp.mcp_webhooks import register_webhooks_tools
 
-__version__ = "2.3.0"
+__version__ = "2.4.0"
 logger = get_logger(name="mattermost_mcp")
 
 #: Typed inputs for every client method, generated from the Mattermost OpenAPI

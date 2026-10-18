@@ -290,7 +290,7 @@
   "name": "assign_access_control_policy_to_channels",
   "http": "POST",
   "path": "/api/v4/access_control_policies/{policy_id}/assign",
-  "summary": "Assign an access control policy to channels",
+  "summary": "Assign an access control policy to channels or teams",
   "parameters": [
    {
     "name": "policy_id",
@@ -304,6 +304,15 @@
    {
     "name": "channel_ids",
     "python_name": "channel_ids",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "array"
+    }
+   },
+   {
+    "name": "team_ids",
+    "python_name": "team_ids",
     "in": "body",
     "required": false,
     "schema": {
@@ -349,6 +358,15 @@
    {
     "name": "device_id",
     "python_name": "device_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "voip_device_id",
+    "python_name": "voip_device_id",
     "in": "body",
     "required": false,
     "schema": {
@@ -1843,6 +1861,15 @@
     }
    },
    {
+    "name": "silent",
+    "python_name": "silent",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "boolean"
+    }
+   },
+   {
     "name": "channel_id",
     "python_name": "channel_id",
     "in": "body",
@@ -2173,6 +2200,123 @@
     "required": false,
     "schema": {
      "type": "object"
+    }
+   },
+   {
+    "name": "repeat_type",
+    "python_name": "repeat_type",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "repeat_timezone",
+    "python_name": "repeat_timezone",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "create_scheduled_recap",
+  "name": "create_scheduled_recap",
+  "http": "POST",
+  "path": "/api/v4/scheduled_recaps",
+  "summary": "Create a scheduled recap",
+  "parameters": [
+   {
+    "name": "title",
+    "python_name": "title",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "days_of_week",
+    "python_name": "days_of_week",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "time_of_day",
+    "python_name": "time_of_day",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "timezone",
+    "python_name": "timezone",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "time_period",
+    "python_name": "time_period",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "channel_mode",
+    "python_name": "channel_mode",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "channel_ids",
+    "python_name": "channel_ids",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "array"
+    }
+   },
+   {
+    "name": "custom_instructions",
+    "python_name": "custom_instructions",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "agent_id",
+    "python_name": "agent_id",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "is_recurring",
+    "python_name": "is_recurring",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "boolean"
     }
    }
   ]
@@ -3168,6 +3312,24 @@
   ]
  },
  {
+  "method": "delete_scheduled_recap",
+  "name": "delete_scheduled_recap",
+  "http": "DELETE",
+  "path": "/api/v4/scheduled_recaps/{scheduled_recap_id}",
+  "summary": "Delete a scheduled recap",
+  "parameters": [
+   {
+    "name": "scheduled_recap_id",
+    "python_name": "scheduled_recap_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
   "method": "delete_scheme",
   "name": "delete_scheme",
   "http": "DELETE",
@@ -3456,6 +3618,69 @@
     "name": "command",
     "python_name": "command",
     "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "execute_dialog_action",
+  "name": "execute_dialog_action",
+  "http": "POST",
+  "path": "/api/v4/actions/dialogs/execute",
+  "summary": "Execute a dialog action button",
+  "parameters": [
+   {
+    "name": "url",
+    "python_name": "url",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "context",
+    "python_name": "context",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "channel_id",
+    "python_name": "channel_id",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "team_id",
+    "python_name": "team_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "generate_c_f_post_exposure_report",
+  "name": "generate_c_f_post_exposure_report",
+  "http": "POST",
+  "path": "/api/v4/content_flagging/post/{post_id}/exposure_report",
+  "summary": "Generate and download a post exposure report",
+  "parameters": [
+   {
+    "name": "post_id",
+    "python_name": "post_id",
+    "in": "path",
     "required": true,
     "schema": {
      "type": "string"
@@ -3975,14 +4200,6 @@
   "http": "GET",
   "path": "/api/v4/brand/image",
   "summary": "Get brand image",
-  "parameters": []
- },
- {
-  "method": "get_bulk_reactions",
-  "name": "get_bulk_reactions",
-  "http": "POST",
-  "path": "/api/v4/posts/ids/reactions",
-  "summary": "Bulk get the reaction for posts",
   "parameters": []
  },
  {
@@ -6275,6 +6492,14 @@
   "parameters": []
  },
  {
+  "method": "get_non_compliant_user_access_token_count",
+  "name": "get_non_compliant_user_access_token_count",
+  "http": "GET",
+  "path": "/api/v4/users/tokens/non_compliant/count",
+  "summary": "Count non-compliant personal access tokens",
+  "parameters": []
+ },
+ {
   "method": "get_notices",
   "name": "get_notices",
   "http": "GET",
@@ -7184,10 +7409,28 @@
     }
    },
    {
+    "name": "channel_id",
+    "python_name": "channel_id",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "team_id",
+    "python_name": "team_id",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
     "name": "target_type",
     "python_name": "target_type",
     "in": "query",
-    "required": true,
+    "required": false,
     "schema": {
      "type": "string"
     }
@@ -7202,6 +7445,15 @@
     }
    },
    {
+    "name": "since",
+    "python_name": "since",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
     "name": "cursor_id",
     "python_name": "cursor_id",
     "in": "query",
@@ -7213,6 +7465,15 @@
    {
     "name": "cursor_create_at",
     "python_name": "cursor_create_at",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "cursor_update_at",
+    "python_name": "cursor_update_at",
     "in": "query",
     "required": false,
     "schema": {
@@ -7265,6 +7526,15 @@
     }
    },
    {
+    "name": "since",
+    "python_name": "since",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
     "name": "cursor_id",
     "python_name": "cursor_id",
     "in": "query",
@@ -7276,6 +7546,15 @@
    {
     "name": "cursor_create_at",
     "python_name": "cursor_create_at",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "cursor_update_at",
+    "python_name": "cursor_update_at",
     "in": "query",
     "required": false,
     "schema": {
@@ -7382,6 +7661,14 @@
     }
    }
   ]
+ },
+ {
+  "method": "get_recap_limit_status",
+  "name": "get_recap_limit_status",
+  "http": "GET",
+  "path": "/api/v4/recaps/limit_status",
+  "summary": "Get recap limit status for the current user",
+  "parameters": []
  },
  {
   "method": "get_recaps_for_user",
@@ -7660,6 +7947,51 @@
   ]
  },
  {
+  "method": "get_scheduled_recap",
+  "name": "get_scheduled_recap",
+  "http": "GET",
+  "path": "/api/v4/scheduled_recaps/{scheduled_recap_id}",
+  "summary": "Get a scheduled recap",
+  "parameters": [
+   {
+    "name": "scheduled_recap_id",
+    "python_name": "scheduled_recap_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "get_scheduled_recaps",
+  "name": "get_scheduled_recaps",
+  "http": "GET",
+  "path": "/api/v4/scheduled_recaps",
+  "summary": "Get current user's scheduled recaps",
+  "parameters": [
+   {
+    "name": "page",
+    "python_name": "page",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "per_page",
+    "python_name": "per_page",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   }
+  ]
+ },
+ {
   "method": "get_scheme",
   "name": "get_scheme",
   "http": "GET",
@@ -7727,6 +8059,14 @@
   "http": "GET",
   "path": "/api/v4/limits/server",
   "summary": "Gets the server limits for the server",
+  "parameters": []
+ },
+ {
+  "method": "get_session_attributes_manifest",
+  "name": "get_session_attributes_manifest",
+  "http": "GET",
+  "path": "/api/v4/users/sessions/attributes/manifest",
+  "summary": "Get the session attributes manifest",
   "parameters": []
  },
  {
@@ -7977,6 +8317,15 @@
     }
    },
    {
+    "name": "since",
+    "python_name": "since",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
     "name": "cursor_id",
     "python_name": "cursor_id",
     "in": "query",
@@ -7988,6 +8337,15 @@
    {
     "name": "cursor_create_at",
     "python_name": "cursor_create_at",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "cursor_update_at",
+    "python_name": "cursor_update_at",
     "in": "query",
     "required": false,
     "schema": {
@@ -8011,6 +8369,42 @@
   "http": "GET",
   "path": "/api/v4/teams/{team_id}",
   "summary": "Get a team",
+  "parameters": [
+   {
+    "name": "team_id",
+    "python_name": "team_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "get_team_access_control_attributes",
+  "name": "get_team_access_control_attributes",
+  "http": "GET",
+  "path": "/api/v4/teams/{team_id}/access_control/attributes",
+  "summary": "Get the access control attributes governing a team",
+  "parameters": [
+   {
+    "name": "team_id",
+    "python_name": "team_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "get_team_access_control_policy",
+  "name": "get_team_access_control_policy",
+  "http": "GET",
+  "path": "/api/v4/teams/{team_id}/access_control/policy",
+  "summary": "Get the access control policy for a team",
   "parameters": [
    {
     "name": "team_id",
@@ -9540,6 +9934,15 @@
     "schema": {
      "type": "string"
     }
+   },
+   {
+    "name": "graceful",
+    "python_name": "graceful",
+    "in": "query",
+    "required": false,
+    "schema": {
+     "type": "boolean"
+    }
    }
   ]
  },
@@ -9889,6 +10292,15 @@
     }
    },
    {
+    "name": "voip_device_id",
+    "python_name": "voip_device_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
     "name": "ldap_only",
     "python_name": "ldap_only",
     "in": "body",
@@ -9963,6 +10375,15 @@
    {
     "name": "device_id",
     "python_name": "device_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "voip_device_id",
+    "python_name": "voip_device_id",
     "in": "body",
     "required": false,
     "schema": {
@@ -10071,7 +10492,7 @@
     "name": "team_id",
     "python_name": "team_id",
     "in": "body",
-    "required": true,
+    "required": false,
     "schema": {
      "type": "string"
     }
@@ -10255,6 +10676,15 @@
   "summary": "Migrate user accounts authentication type to LDAP.",
   "parameters": [
    {
+    "name": "from",
+    "python_name": "from_",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
     "name": "match_field",
     "python_name": "match_field",
     "in": "body",
@@ -10282,6 +10712,15 @@
   "summary": "Migrate user accounts authentication type to SAML.",
   "parameters": [
    {
+    "name": "from",
+    "python_name": "from_",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
     "name": "matches",
     "python_name": "matches",
     "in": "body",
@@ -10308,6 +10747,15 @@
   "path": "/api/v4/config/migrate",
   "summary": "Migrate config storage",
   "parameters": [
+   {
+    "name": "from",
+    "python_name": "from_",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
    {
     "name": "to",
     "python_name": "to",
@@ -11425,6 +11873,24 @@
   ]
  },
  {
+  "method": "pause_scheduled_recap",
+  "name": "pause_scheduled_recap",
+  "http": "POST",
+  "path": "/api/v4/scheduled_recaps/{scheduled_recap_id}/pause",
+  "summary": "Pause a scheduled recap",
+  "parameters": [
+   {
+    "name": "scheduled_recap_id",
+    "python_name": "scheduled_recap_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
   "method": "permanent_delete_all_users",
   "name": "permanent_delete_all_users",
   "http": "DELETE",
@@ -11613,6 +12079,24 @@
     "name": "export_name",
     "python_name": "export_name",
     "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "preview_license_file",
+  "name": "preview_license_file",
+  "http": "POST",
+  "path": "/api/v4/license/preview",
+  "summary": "Preview license file",
+  "parameters": [
+   {
+    "name": "license",
+    "python_name": "license",
+    "in": "body",
     "required": true,
     "schema": {
      "type": "string"
@@ -12479,6 +12963,24 @@
   ]
  },
  {
+  "method": "resume_scheduled_recap",
+  "name": "resume_scheduled_recap",
+  "http": "POST",
+  "path": "/api/v4/scheduled_recaps/{scheduled_recap_id}/resume",
+  "summary": "Resume a scheduled recap",
+  "parameters": [
+   {
+    "name": "scheduled_recap_id",
+    "python_name": "scheduled_recap_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
   "method": "reveal_post",
   "name": "reveal_post",
   "http": "GET",
@@ -12513,6 +13015,14 @@
     }
    }
   ]
+ },
+ {
+  "method": "revoke_non_compliant_user_access_tokens",
+  "name": "revoke_non_compliant_user_access_tokens",
+  "http": "POST",
+  "path": "/api/v4/users/tokens/non_compliant/revoke",
+  "summary": "Revoke non-compliant personal access tokens",
+  "parameters": []
  },
  {
   "method": "revoke_session",
@@ -12608,6 +13118,33 @@
     "required": false,
     "schema": {
      "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "rotate_user_access_token",
+  "name": "rotate_user_access_token",
+  "http": "POST",
+  "path": "/api/v4/users/tokens/rotate",
+  "summary": "Rotate a personal access token",
+  "parameters": [
+   {
+    "name": "token_id",
+    "python_name": "token_id",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "expires_at",
+    "python_name": "expires_at",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "integer"
     }
    }
   ]
@@ -13324,6 +13861,114 @@
    {
     "name": "page",
     "python_name": "page",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "per_page",
+    "python_name": "per_page",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   }
+  ]
+ },
+ {
+  "method": "search_property_fields",
+  "name": "search_property_fields",
+  "http": "POST",
+  "path": "/api/v4/properties/groups/{group_name}/fields/search",
+  "summary": "Search property fields across multiple object types",
+  "parameters": [
+   {
+    "name": "group_name",
+    "python_name": "group_name",
+    "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "object_types",
+    "python_name": "object_types",
+    "in": "body",
+    "required": true,
+    "schema": {
+     "type": "array"
+    }
+   },
+   {
+    "name": "channel_id",
+    "python_name": "channel_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "team_id",
+    "python_name": "team_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "target_type",
+    "python_name": "target_type",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "target_id",
+    "python_name": "target_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "since",
+    "python_name": "since",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "cursor_id",
+    "python_name": "cursor_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "cursor_create_at",
+    "python_name": "cursor_create_at",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "cursor_update_at",
+    "python_name": "cursor_update_at",
     "in": "body",
     "required": false,
     "schema": {
@@ -14189,7 +14834,7 @@
     "name": "team_id",
     "python_name": "team_id",
     "in": "body",
-    "required": true,
+    "required": false,
     "schema": {
      "type": "string"
     }
@@ -14228,6 +14873,15 @@
     "required": false,
     "schema": {
      "type": "boolean"
+    }
+   },
+   {
+    "name": "file_ids",
+    "python_name": "file_ids",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "array"
     }
    }
   ]
@@ -14506,6 +15160,204 @@
   "http": "POST",
   "path": "/api/v4/email/test",
   "summary": "Send a test email",
+  "parameters": [
+   {
+    "name": "ServiceSettings",
+    "python_name": "ServiceSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "TeamSettings",
+    "python_name": "TeamSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "SqlSettings",
+    "python_name": "SqlSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "LogSettings",
+    "python_name": "LogSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "PasswordSettings",
+    "python_name": "PasswordSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "FileSettings",
+    "python_name": "FileSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "EmailSettings",
+    "python_name": "EmailSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "RateLimitSettings",
+    "python_name": "RateLimitSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "PrivacySettings",
+    "python_name": "PrivacySettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "SupportSettings",
+    "python_name": "SupportSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "GitLabSettings",
+    "python_name": "GitLabSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "GoogleSettings",
+    "python_name": "GoogleSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "Office365Settings",
+    "python_name": "Office365Settings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "LdapSettings",
+    "python_name": "LdapSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "ComplianceSettings",
+    "python_name": "ComplianceSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "LocalizationSettings",
+    "python_name": "LocalizationSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "SamlSettings",
+    "python_name": "SamlSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "NativeAppSettings",
+    "python_name": "NativeAppSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "ClusterSettings",
+    "python_name": "ClusterSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "MetricsSettings",
+    "python_name": "MetricsSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   },
+   {
+    "name": "AnalyticsSettings",
+    "python_name": "AnalyticsSettings",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "object"
+    }
+   }
+  ]
+ },
+ {
+  "method": "test_file_store_connection",
+  "name": "test_file_store_connection",
+  "http": "POST",
+  "path": "/api/v4/file/test",
+  "summary": "Test the configured file storage backend",
   "parameters": [
    {
     "name": "ServiceSettings",
@@ -15000,33 +15852,6 @@
     "schema": {
      "type": "string"
     }
-   },
-   {
-    "name": "LoginButtonColor",
-    "python_name": "LoginButtonColor",
-    "in": "body",
-    "required": false,
-    "schema": {
-     "type": "string"
-    }
-   },
-   {
-    "name": "LoginButtonBorderColor",
-    "python_name": "LoginButtonBorderColor",
-    "in": "body",
-    "required": false,
-    "schema": {
-     "type": "string"
-    }
-   },
-   {
-    "name": "LoginButtonTextColor",
-    "python_name": "LoginButtonTextColor",
-    "in": "body",
-    "required": false,
-    "schema": {
-     "type": "string"
-    }
    }
   ]
  },
@@ -15333,33 +16158,6 @@
     "schema": {
      "type": "string"
     }
-   },
-   {
-    "name": "LoginButtonColor",
-    "python_name": "LoginButtonColor",
-    "in": "body",
-    "required": false,
-    "schema": {
-     "type": "string"
-    }
-   },
-   {
-    "name": "LoginButtonBorderColor",
-    "python_name": "LoginButtonBorderColor",
-    "in": "body",
-    "required": false,
-    "schema": {
-     "type": "string"
-    }
-   },
-   {
-    "name": "LoginButtonTextColor",
-    "python_name": "LoginButtonTextColor",
-    "in": "body",
-    "required": false,
-    "schema": {
-     "type": "string"
-    }
    }
   ]
  },
@@ -15628,7 +16426,7 @@
   "name": "unassign_access_control_policy_from_channels",
   "http": "DELETE",
   "path": "/api/v4/access_control_policies/{policy_id}/unassign",
-  "summary": "Unassign an access control policy from channels",
+  "summary": "Unassign an access control policy from channels or teams",
   "parameters": [
    {
     "name": "policy_id",
@@ -15642,6 +16440,15 @@
    {
     "name": "channel_ids",
     "python_name": "channel_ids",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "array"
+    }
+   },
+   {
+    "name": "team_ids",
+    "python_name": "team_ids",
     "in": "body",
     "required": false,
     "schema": {
@@ -17465,6 +18272,141 @@
     "schema": {
      "type": "string"
     }
+   },
+   {
+    "name": "repeat_type",
+    "python_name": "repeat_type",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "repeat_timezone",
+    "python_name": "repeat_timezone",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   }
+  ]
+ },
+ {
+  "method": "update_scheduled_recap",
+  "name": "update_scheduled_recap",
+  "http": "PUT",
+  "path": "/api/v4/scheduled_recaps/{scheduled_recap_id}",
+  "summary": "Update a scheduled recap",
+  "parameters": [
+   {
+    "name": "scheduled_recap_id",
+    "python_name": "scheduled_recap_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "title",
+    "python_name": "title",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "days_of_week",
+    "python_name": "days_of_week",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "integer"
+    }
+   },
+   {
+    "name": "time_of_day",
+    "python_name": "time_of_day",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "timezone",
+    "python_name": "timezone",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "time_period",
+    "python_name": "time_period",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "channel_mode",
+    "python_name": "channel_mode",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "channel_ids",
+    "python_name": "channel_ids",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "array"
+    }
+   },
+   {
+    "name": "custom_instructions",
+    "python_name": "custom_instructions",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "agent_id",
+    "python_name": "agent_id",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "string"
+    }
+   },
+   {
+    "name": "is_recurring",
+    "python_name": "is_recurring",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "boolean"
+    }
+   },
+   {
+    "name": "enabled",
+    "python_name": "enabled",
+    "in": "body",
+    "required": false,
+    "schema": {
+     "type": "boolean"
+    }
    }
   ]
  },
@@ -18055,7 +18997,7 @@
     "name": "auth_data",
     "python_name": "auth_data",
     "in": "body",
-    "required": true,
+    "required": false,
     "schema": {
      "type": "string"
     }

@@ -143,6 +143,15 @@ class Api(ApiClientBase):
         url = "/api/v4/site_url/test"
         return self.request("POST", url, data=kwargs)
 
+    def test_file_store_connection(self, **kwargs) -> Any:
+        """Test the configured file storage backend
+
+        Path: /api/v4/file/test
+        Method: POST
+        """
+        url = "/api/v4/file/test"
+        return self.request("POST", url, data=kwargs)
+
     def test_s3_connection(self, **kwargs) -> Any:
         """Test AWS S3 connection
 
@@ -232,6 +241,15 @@ class Api(ApiClientBase):
         """
         url = "/api/v4/license"
         return self.request("DELETE", url, params=kwargs)
+
+    def preview_license_file(self, **kwargs) -> Any:
+        """Preview license file
+
+        Path: /api/v4/license/preview
+        Method: POST
+        """
+        url = "/api/v4/license/preview"
+        return self.request("POST", url, data=kwargs)
 
     def get_client_license(self, **kwargs) -> Any:
         """Get client license

@@ -1,9 +1,24 @@
+import keyword
 from typing import Any
 from urllib.parse import urljoin
 
 import requests
 from agent_connector_sdk.tls.profile import ResolvedTLSProfile
 from agent_connector_sdk.tls.resolve import resolve_tls_profile
+
+
+def _wire_names(values: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Restore keyword-aliased argument names (``from_``) to their wire names (``from``).
+
+    operation_manifest.json exposes a field named after a Python keyword as
+    ``<keyword>_``; the Mattermost API expects the original name.
+    """
+    if not values:
+        return values
+    return {
+        (key[:-1] if key.endswith("_") and keyword.iskeyword(key[:-1]) else key): value
+        for key, value in values.items()
+    }
 
 
 class ApiClientBase:
@@ -45,6 +60,9 @@ class ApiClientBase:
             url = urljoin(self.base_url, endpoint)
 
         headers = {"Content-Type": "application/json"}
+        params = _wire_names(params)
+        if isinstance(data, dict):
+            data = _wire_names(data)
         response = self._session.request(
             method=method,
             url=url,

@@ -26,6 +26,15 @@ class Api(ApiClientBase):
         url = "/api/v4/recaps"
         return self.request("POST", url, data=kwargs)
 
+    def get_recap_limit_status(self, **kwargs) -> Any:
+        """Get recap limit status for the current user
+
+        Path: /api/v4/recaps/limit_status
+        Method: GET
+        """
+        url = "/api/v4/recaps/limit_status"
+        return self.request("GET", url, params=kwargs)
+
     def mark_recaps_as_viewed(self, **kwargs) -> Any:
         """Mark all of the authenticated user's finished recaps as viewed
 

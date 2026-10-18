@@ -126,3 +126,12 @@ class Api(ApiClientBase):
         """
         url = f"/api/v4/content_flagging/post/{post_id}/report"
         return self.request("POST", url, data=kwargs)
+
+    def generate_c_f_post_exposure_report(self, post_id: str, **kwargs) -> Any:
+        """Generate and download a post exposure report
+
+        Path: /api/v4/content_flagging/post/{post_id}/exposure_report
+        Method: POST
+        """
+        url = f"/api/v4/content_flagging/post/{post_id}/exposure_report"
+        return self.request("POST", url, data=kwargs)

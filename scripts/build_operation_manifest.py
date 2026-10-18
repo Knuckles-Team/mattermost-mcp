@@ -3,6 +3,10 @@
 Usage:
     MATTERMOST_OPENAPI_SOURCE=<mattermost>/api/v4/source python scripts/build_operation_manifest.py
 
+The source is the official Mattermost API v4 OpenAPI source (mattermost/mattermost
+``api/v4/source``, published at api.mattermost.com) at the tag matching the deployed
+server; SOURCE_VERSION below records which one generated the committed files.
+
 One entry per OpenAPI operation, keyed by the generated client method name, with
 its path and query parameters and the top-level properties of a JSON object
 request body (sent as the body's own fields, matching the client's
@@ -24,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "mattermost_mcp" / "operation_manifest.json"
 EXCLUDED = {"definitions.yaml", "introduction.yaml"}
 METHODS = ("get", "post", "put", "delete", "patch")
+SOURCE_VERSION = "mattermost/mattermost v11.11.1 api/v4/source"
 JSON_TYPES = {"string", "integer", "number", "boolean", "array", "object"}
 
 
@@ -55,8 +60,18 @@ def resolve(node: object, definitions: dict) -> dict:
 
 
 def usable(name: object) -> bool:
-    """A name a typed keyword argument can carry."""
-    return str(name).isidentifier() and not keyword.iskeyword(str(name))
+    """A wire name a typed keyword argument can carry (directly or via an alias)."""
+    return str(name).isidentifier()
+
+
+def python_name(name: str) -> str:
+    """The keyword-argument name for a wire field.
+
+    A Python keyword (``from``, ``in``...) cannot be a parameter name, so it is
+    exposed as ``<name>_`` and aliased back to the wire name: the client's
+    ``ApiClientBase.request`` restores ``from_`` to ``from`` before sending.
+    """
+    return f"{name}_" if keyword.iskeyword(name) else name
 
 
 def schema_type(schema: dict) -> dict:
@@ -80,7 +95,7 @@ def body_parameters(operation: dict, definitions: dict, taken: set[str]) -> list
         out.append(
             {
                 "name": name,
-                "python_name": name,
+                "python_name": python_name(name),
                 "in": "body",
                 "required": name in required,
                 "schema": schema_type(resolve(prop, definitions)),
@@ -146,7 +161,7 @@ def main() -> int:
                     params.append(
                         {
                             "name": pname,
-                            "python_name": pname,
+                            "python_name": python_name(pname),
                             "in": where,
                             "required": bool(param.get("required")) or where == "path",
                             "schema": schema_type(

@@ -101,7 +101,7 @@ class Api(ApiClientBase):
         return self.request("GET", url, params=kwargs)
 
     def assign_access_control_policy_to_channels(self, policy_id: str, **kwargs) -> Any:
-        """Assign an access control policy to channels
+        """Assign an access control policy to channels or teams
 
         Path: /api/v4/access_control_policies/{policy_id}/assign
         Method: POST
@@ -112,7 +112,7 @@ class Api(ApiClientBase):
     def unassign_access_control_policy_from_channels(
         self, policy_id: str, **kwargs
     ) -> Any:
-        """Unassign an access control policy from channels
+        """Unassign an access control policy from channels or teams
 
         Path: /api/v4/access_control_policies/{policy_id}/unassign
         Method: DELETE
