@@ -71,7 +71,7 @@ from mattermost_mcp.mcp.mcp_users import register_users_tools
 from mattermost_mcp.mcp.mcp_views import register_views_tools
 from mattermost_mcp.mcp.mcp_webhooks import register_webhooks_tools
 
-__version__ = "0.15.0"
+__version__ = "2.2.0"
 logger = get_logger(name="mattermost_mcp")
 
 # Keep imported registrars as module attributes so ruff (F401) does not strip
