@@ -1,8 +1,7 @@
 # Architecture
 
-`mattermost-mcp` follows the standardized agent-utilities **dynamic-facade**
+`mattermost-mcp` follows the standardized agent-connector-sdk **dynamic-facade**
 architecture: a multi-inheritance REST client under one `Api` object, a thin FastMCP
-tool layer, and an optional Pydantic-AI agent server that consumes the MCP tools.
 
 ## Layers
 
@@ -16,19 +15,9 @@ tool layer, and an optional Pydantic-AI agent server that consumes the MCP tools
   module per domain) tagged under the `MM` prefix. The tool layer adds no business
   logic; it delegates to the `Api` facade. Runtime toolset selection and visibility
   filtering keep the model's context window lean.
-- **`mattermost_mcp.agent_server`** — the Pydantic-AI agent (`mattermost-agent`),
   which connects to the running MCP server over `MCP_URL` and can serve a web UI.
 
 ## Request flow
-
-```mermaid
-graph TD
-    Agent([Pydantic-AI Agent / MCP Client]) --> Server[FastMCP Server]
-    Server --> Facade[Api Dynamic Facade]
-    Facade --> Auth[Credentials Auth Handler]
-    Facade --> Domains[Per-domain REST clients]
-    Domains --> Mattermost([Mattermost Server v4 REST API])
-```
 
 ## Deployment topology
 
@@ -40,5 +29,4 @@ graph LR
     MCP -->|v4 REST| MM([Mattermost Server])
 ```
 
-See [Deployment](deployment.md) for the Compose stacks, the agent server, the Caddy
 reverse proxy, and DNS, and [Concepts](concepts.md) for the `CONCEPT:MM-*` registry.

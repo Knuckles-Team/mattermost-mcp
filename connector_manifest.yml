@@ -94,7 +94,7 @@ sync:
   updated_field: update_at
   pagination: page
   doc_type: channel
-  tool_schema_sha256: 3d902155dd8368ab24efbf0b8d18f4fdb50053e943a7dfb294032e58de6a4a36
+  tool_schema_sha256: 5e14e805e54dde171b5da98eb23605ae5b9bb7bf32b91bec171d8d9b6df952c9
   raw:
     server: mattermost-mcp
     tool: mattermost_mcp_channels
@@ -120,7 +120,7 @@ sync:
   updated_field: update_at
   pagination: page
   doc_type: team
-  tool_schema_sha256: 360d48a2ef75a69e692004d092c812db4dfece974dd5f41a7499430713494b76
+  tool_schema_sha256: ce51e55b5207c9b4bae60e081945e00c8dab2ebbe0e77711d4707dd15fc3e9ef
   raw:
     server: mattermost-mcp
     tool: mattermost_mcp_teams

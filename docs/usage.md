@@ -39,8 +39,8 @@ api = Api(
 )
 
 # Reads
-me = api.get_me()                       # the connected bot/user
-teams = api.get_teams()                 # teams the bot belongs to
+me = api.get_me()  # the connected bot/user
+teams = api.get_teams()  # teams the bot belongs to
 channels = api.get_channels(teams[0]["id"])
 ```
 
@@ -48,7 +48,10 @@ Build a client straight from the environment:
 
 ```python
 from mattermost_mcp.auth import get_client
-api = get_client()        # reads MATTERMOST_URL / MATTERMOST_TOKEN from the environment / .env
+
+api = (
+    get_client()
+)  # reads MATTERMOST_URL / MATTERMOST_TOKEN from the environment / .env
 ```
 
 ### Writes
@@ -77,9 +80,4 @@ mattermost-mcp --help
 
 The companion agent is exposed as `mattermost-agent`:
 
-```bash
-mattermost-agent --mcp-url http://localhost:8000/mcp --host 0.0.0.0 --port 9035 --web
-```
-
-See [Deployment](deployment.md) for the agent server, Docker Compose, reverse proxy,
 and DNS.

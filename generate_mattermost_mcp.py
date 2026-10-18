@@ -316,8 +316,8 @@ import os
 import sys
 from typing import Any
 
-from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp.server_factory import create_mcp_server
+from agent_connector_sdk.utilities import to_boolean
+from agent_connector_sdk.mcp.server import create_mcp_server
 from dotenv import find_dotenv, load_dotenv
 from fastmcp.utilities.logging import get_logger
 from starlette.requests import Request
@@ -325,7 +325,7 @@ from starlette.responses import JSONResponse
 
 {mcp_server_imports_str}
 
-__version__ = "0.15.0"
+__version__ = "2.2.0"
 logger = get_logger(name="mattermost_mcp")
 
 
