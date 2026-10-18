@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mattermost-mcp"
-version = "2.4.0"
+version = "2.4.1"
 description = "Mattermost Team Collaboration MCP Server and Agent for Agentic AI!"
 readme = "README.md"
 classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
@@ -74,7 +74,12 @@ override-dependencies = [
 [tool.pipelines]
 # Operations absent from the Mattermost v11.11.1 API v4 spec (the deployed server's
 # version), so the regenerated client no longer serves them.
-retired-tools = ["mattermost_get_bulk_reactions"]
+retired-tools = [
+  "mattermost_get_bulk_reactions",
+  # split by the SDK from the legacy mattermost_mcp_reactions router (removed in
+  # 2.4.1); it called the retired get_bulk_reactions and was untyped.
+  "mattermost_mcp_reactions_get_bulk_reactions",
+]
 
 [tool.pipelines_hooks.ste]
 exempt = ["specs/*", "specs/**/*"]

@@ -12,11 +12,9 @@ package_dir = os.environ.get(
     str(Path(__file__).resolve().parent / "mattermost_mcp"),
 )
 api_dir = os.path.join(package_dir, "api")
-mcp_dir = os.path.join(package_dir, "mcp")
 
 # Ensure target directories exist
 os.makedirs(api_dir, exist_ok=True)
-os.makedirs(mcp_dir, exist_ok=True)
 
 files = [f for f in os.listdir(source_dir) if f.endswith(".yaml") or f.endswith(".yml")]
 files = sorted(files)
@@ -167,70 +165,7 @@ class Api(ApiClientBase):
     with open(api_filepath, "w") as f:
         f.write(api_content)
 
-    # 2. Write the MCP tool registration file
-    mcp_filename = f"mcp_{module_name}.py"
-    mcp_filepath = os.path.join(mcp_dir, mcp_filename)
-
-    actions_list_str = ", ".join([f"'{a}'" for a in actions_list])
-
-    mcp_content = f"""\"\"\"
-This file was automatically generated. Do not edit manually.
-\"\"\"
-from fastmcp import Context, FastMCP
-from fastmcp.dependencies import Depends
-from pydantic import Field
-
-from mattermost_mcp.auth import get_client
-
-
-def register_{module_name}_tools(mcp: FastMCP):
-    \"\"\"Register Mattermost MCP {module_name} tools.\"\"\"
-
-    @mcp.tool(tags=["{module_name}"])
-    async def mattermost_mcp_{module_name}(
-        action: str = Field(
-            description="Action to perform. Must be one of: {actions_list_str}"
-        ),
-        params_json: str = Field(
-            default="{{}}", description="JSON string of parameters."
-        ),
-        client=Depends(get_client),
-        ctx: Context | None = Field(default=None, description="MCP context"),
-    ) -> dict:
-        \"\"\"Manage Mattermost MCP {module_name} operations.\"\"\"
-        if ctx:
-            await ctx.info("Executing {module_name} operation: " + str(action) + "...")
-        import json
-
-        try:
-            kwargs = json.loads(params_json)
-        except Exception as e:
-            return {{"error": "Invalid params_json"}}
-
-        kwargs = {{k: v for k, v in kwargs.items() if v is not None}}
-
-        method = getattr(client, action, None)
-        if not method:
-            alt_action = action.replace("-", "_").replace(" ", "_").lower()
-            method = getattr(client, alt_action, None)
-
-        if not method:
-            return {{"error": "Unknown action '" + str(action) + "' on client."}}
-
-        try:
-            res = method(**kwargs)
-            if res is None:
-                return {{"status": "success"}}
-            return res
-        except Exception as e:
-            return {{"error": "Operation failed"}}
-"""
-    with open(mcp_filepath, "w") as f:
-        f.write(mcp_content)
-
-print(
-    f"Successfully generated {len(generated_modules)} modules in api/ and mcp/ directories!"
-)
+print(f"Successfully generated {len(generated_modules)} client modules in api/!")
 
 # 3. Generate api/__init__.py
 api_init_filepath = os.path.join(api_dir, "__init__.py")
@@ -257,30 +192,6 @@ api_init_content += (
 with open(api_init_filepath, "w") as f:
     f.write(api_init_content)
 
-# 4. Generate mcp/__init__.py
-mcp_init_filepath = os.path.join(mcp_dir, "__init__.py")
-mcp_init_imports = []
-mcp_init_all = []
-
-for module_info in generated_modules:
-    name_str = str(module_info["name"])
-    mcp_init_imports.append(
-        f"from mattermost_mcp.mcp.mcp_{name_str} import register_{name_str}_tools"
-    )
-    mcp_init_all.append(f"register_{name_str}_tools")
-
-mcp_init_content = """\"\"\"
-This file was automatically generated. Do not edit manually.
-\"\"\"
-"""
-mcp_init_content += "\n".join(mcp_init_imports) + "\n\n"
-mcp_init_content += (
-    "__all__ = [\n" + ",\n".join([f'    "{a}"' for a in mcp_init_all]) + ",\n]\n"
-)
-
-with open(mcp_init_filepath, "w") as f:
-    f.write(mcp_init_content)
-
 # 5. Generate api_client.py
 api_client_filepath = os.path.join(package_dir, "api_client.py")
 api_client_imports = []
@@ -300,85 +211,16 @@ api_client_content = """\"\"\"CONCEPT:MM-OS.governance.mm Dynamic client facade 
 # !/usr/bin/env python
 """
 api_client_content += "\n".join(api_client_imports) + "\n\n"
-api_client_content += '__version__ = "0.15.0"\n\n\n'
+_existing = (
+    open(api_client_filepath).read() if os.path.exists(api_client_filepath) else ""
+)
+_version = re.search(r'__version__ = "([^"]+)"', _existing)
+api_client_content += (
+    f'__version__ = "{_version.group(1) if _version else "0.0.0"}"\n\n\n'
+)
 api_client_content += f"class Api({api_client_classes_str}):\n    pass\n"
 
 with open(api_client_filepath, "w") as f:
     f.write(api_client_content)
-
-# 6. Generate mcp_server.py
-mcp_server_filepath = os.path.join(package_dir, "mcp_server.py")
-mcp_server_imports = []
-mcp_server_calls = []
-
-for module_info in generated_modules:
-    name_str = str(module_info["name"])
-    mcp_server_imports.append(
-        f"from mattermost_mcp.mcp.mcp_{name_str} import register_{name_str}_tools"
-    )
-
-    env_var_name = f"{name_str.upper()}TOOL"
-    call_block = f"""    DEFAULT_{env_var_name} = to_boolean(os.getenv("{env_var_name}", "True"))
-    if DEFAULT_{env_var_name}:
-        register_{name_str}_tools(mcp)"""
-    mcp_server_calls.append(call_block)
-
-mcp_server_imports_str = "\n".join(mcp_server_imports)
-mcp_server_calls_str = "\n\n".join(mcp_server_calls)
-
-mcp_server_content = f"""\"\"\"Main FastMCP server and tool registration.\"\"\"
-import os
-import sys
-from typing import Any
-
-from agent_connector_sdk.utilities import to_boolean
-from agent_connector_sdk.mcp.server import create_mcp_server
-from dotenv import find_dotenv, load_dotenv
-from fastmcp.utilities.logging import get_logger
-from starlette.requests import Request
-from starlette.responses import JSONResponse
-
-{mcp_server_imports_str}
-
-__version__ = "2.4.0"
-logger = get_logger(name="mattermost_mcp")
-
-
-def get_mcp_instance() -> tuple[Any, ...]:
-    load_dotenv(find_dotenv())
-    args, mcp, middlewares = create_mcp_server(
-        name="Mattermost MCP MCP",
-        version=__version__,
-        instructions="Mattermost MCP MCP Server - Managed dynamic operations.",
-    )
-
-    @mcp.custom_route("/health", methods=["GET"])
-    async def health_check(request: Request) -> JSONResponse:
-        return JSONResponse({{"status": "OK"}})
-
-{mcp_server_calls_str}
-
-    for mw in middlewares:
-        mcp.add_middleware(mw)
-    return mcp, args, middlewares
-
-
-def mcp_server() -> None:
-    mcp, args, middlewares = get_mcp_instance()
-    print(f"Mattermost MCP MCP v{{__version__}}", file=sys.stderr)
-    if args.transport == "stdio":
-        mcp.run(transport="stdio")
-    elif args.transport == "streamable-http":
-        mcp.run(transport="streamable-http", host=args.host, port=args.port)
-    else:
-        mcp.run(transport="stdio")
-
-
-if __name__ == "__main__":
-    mcp_server()
-"""
-
-with open(mcp_server_filepath, "w") as f:
-    f.write(mcp_server_content)
 
 print("All code generation complete!")
