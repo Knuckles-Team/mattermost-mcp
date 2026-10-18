@@ -49,6 +49,7 @@ from mattermost_mcp.api.api_client_reports import Api as ApiReports
 from mattermost_mcp.api.api_client_roles import Api as ApiRoles
 from mattermost_mcp.api.api_client_saml import Api as ApiSaml
 from mattermost_mcp.api.api_client_scheduled_post import Api as ApiScheduledPost
+from mattermost_mcp.api.api_client_scheduled_recaps import Api as ApiScheduledRecaps
 from mattermost_mcp.api.api_client_schemes import Api as ApiSchemes
 from mattermost_mcp.api.api_client_service_terms import Api as ApiServiceTerms
 from mattermost_mcp.api.api_client_sharedchannels import Api as ApiSharedchannels
@@ -105,6 +106,7 @@ __all__ = [
     "ApiRoles",
     "ApiSaml",
     "ApiScheduledPost",
+    "ApiScheduledRecaps",
     "ApiSchemes",
     "ApiServiceTerms",
     "ApiSharedchannels",

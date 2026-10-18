@@ -34,3 +34,12 @@ class Api(ApiClientBase):
         """
         url = "/api/v4/actions/dialogs/lookup"
         return self.request("POST", url, data=kwargs)
+
+    def execute_dialog_action(self, **kwargs) -> Any:
+        """Execute a dialog action button
+
+        Path: /api/v4/actions/dialogs/execute
+        Method: POST
+        """
+        url = "/api/v4/actions/dialogs/execute"
+        return self.request("POST", url, data=kwargs)

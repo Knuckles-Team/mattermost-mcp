@@ -404,6 +404,15 @@ class Api(ApiClientBase):
         url = "/api/v4/users/sessions/device"
         return self.request("PUT", url, data=kwargs)
 
+    def get_session_attributes_manifest(self, **kwargs) -> Any:
+        """Get the session attributes manifest
+
+        Path: /api/v4/users/sessions/attributes/manifest
+        Method: GET
+        """
+        url = "/api/v4/users/sessions/attributes/manifest"
+        return self.request("GET", url, params=kwargs)
+
     def get_user_audits(self, user_id: str, **kwargs) -> Any:
         """Get user's audits
 
@@ -494,6 +503,24 @@ class Api(ApiClientBase):
         url = "/api/v4/users/tokens/revoke"
         return self.request("POST", url, data=kwargs)
 
+    def get_non_compliant_user_access_token_count(self, **kwargs) -> Any:
+        """Count non-compliant personal access tokens
+
+        Path: /api/v4/users/tokens/non_compliant/count
+        Method: GET
+        """
+        url = "/api/v4/users/tokens/non_compliant/count"
+        return self.request("GET", url, params=kwargs)
+
+    def revoke_non_compliant_user_access_tokens(self, **kwargs) -> Any:
+        """Revoke non-compliant personal access tokens
+
+        Path: /api/v4/users/tokens/non_compliant/revoke
+        Method: POST
+        """
+        url = "/api/v4/users/tokens/non_compliant/revoke"
+        return self.request("POST", url, data=kwargs)
+
     def get_user_access_token(self, token_id: str, **kwargs) -> Any:
         """Get a user access token
 
@@ -519,6 +546,15 @@ class Api(ApiClientBase):
         Method: POST
         """
         url = "/api/v4/users/tokens/enable"
+        return self.request("POST", url, data=kwargs)
+
+    def rotate_user_access_token(self, **kwargs) -> Any:
+        """Rotate a personal access token
+
+        Path: /api/v4/users/tokens/rotate
+        Method: POST
+        """
+        url = "/api/v4/users/tokens/rotate"
         return self.request("POST", url, data=kwargs)
 
     def search_user_access_tokens(self, **kwargs) -> Any:

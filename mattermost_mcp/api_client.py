@@ -47,6 +47,7 @@ from mattermost_mcp.api.api_client_reports import Api as ReportsApi
 from mattermost_mcp.api.api_client_roles import Api as RolesApi
 from mattermost_mcp.api.api_client_saml import Api as SamlApi
 from mattermost_mcp.api.api_client_scheduled_post import Api as ScheduledPostApi
+from mattermost_mcp.api.api_client_scheduled_recaps import Api as ScheduledRecapsApi
 from mattermost_mcp.api.api_client_schemes import Api as SchemesApi
 from mattermost_mcp.api.api_client_service_terms import Api as ServiceTermsApi
 from mattermost_mcp.api.api_client_sharedchannels import Api as SharedchannelsApi
@@ -59,7 +60,7 @@ from mattermost_mcp.api.api_client_users import Api as UsersApi
 from mattermost_mcp.api.api_client_views import Api as ViewsApi
 from mattermost_mcp.api.api_client_webhooks import Api as WebhooksApi
 
-__version__ = "2.3.0"
+__version__ = "2.4.0"
 
 
 class Api(
@@ -105,6 +106,7 @@ class Api(
     RolesApi,
     SamlApi,
     ScheduledPostApi,
+    ScheduledRecapsApi,
     SchemesApi,
     ServiceTermsApi,
     SharedchannelsApi,

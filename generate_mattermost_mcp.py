@@ -71,6 +71,15 @@ for file in api_files:
 
     methods_code = []
     actions_list = []
+    seen_names: set[str] = set()
+    duplicated: set[str] = set()
+    for _path in paths:
+        for _verb_name, _op in (content[_path] or {}).items():
+            if _verb_name in ("get", "post", "put", "delete", "patch") and isinstance(
+                _op, dict
+            ):
+                _name = make_func_name(_verb_name, _path, _op.get("operationId"))
+                (duplicated if _name in seen_names else seen_names).add(_name)
 
     for path in paths:
         path_item = content[path]
@@ -87,6 +96,12 @@ for file in api_files:
 
                 op_id = op.get("operationId")
                 func_name = make_func_name(http_method, path, op_id)
+                if func_name in duplicated and "{team_id}" in path:
+                    # Mattermost reuses an operationId for the team-scoped variant
+                    # (SearchFiles); name it <verb>_team_<rest>, as
+                    # scripts/build_operation_manifest.py does.
+                    verb, _, rest = func_name.partition("_")
+                    func_name = f"{verb}_team_{rest}"
                 summary = op.get("summary", "").replace('"', '\\"').replace("\n", " ")
 
                 # Signature parameters
@@ -325,7 +340,7 @@ from starlette.responses import JSONResponse
 
 {mcp_server_imports_str}
 
-__version__ = "2.3.0"
+__version__ = "2.4.0"
 logger = get_logger(name="mattermost_mcp")
 
 

@@ -26,6 +26,15 @@ class Api(ApiClientBase):
         url = f"/api/v4/properties/groups/{group_name}/{object_type}/fields"
         return self.request("POST", url, data=kwargs)
 
+    def search_property_fields(self, group_name: str, **kwargs) -> Any:
+        """Search property fields across multiple object types
+
+        Path: /api/v4/properties/groups/{group_name}/fields/search
+        Method: POST
+        """
+        url = f"/api/v4/properties/groups/{group_name}/fields/search"
+        return self.request("POST", url, data=kwargs)
+
     def delete_property_field(
         self, group_name: str, object_type: str, field_id: str, **kwargs
     ) -> Any:

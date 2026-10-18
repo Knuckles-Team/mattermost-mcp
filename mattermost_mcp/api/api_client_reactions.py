@@ -36,12 +36,3 @@ class Api(ApiClientBase):
         """
         url = f"/api/v4/users/{user_id}/posts/{post_id}/reactions/{emoji_name}"
         return self.request("DELETE", url, params=kwargs)
-
-    def get_bulk_reactions(self, **kwargs) -> Any:
-        """Bulk get the reaction for posts
-
-        Path: /api/v4/posts/ids/reactions
-        Method: POST
-        """
-        url = "/api/v4/posts/ids/reactions"
-        return self.request("POST", url, data=kwargs)
