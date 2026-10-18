@@ -59,7 +59,7 @@ from mattermost_mcp.api.api_client_users import Api as UsersApi
 from mattermost_mcp.api.api_client_views import Api as ViewsApi
 from mattermost_mcp.api.api_client_webhooks import Api as WebhooksApi
 
-__version__ = "2.2.0"
+__version__ = "2.2.1"
 
 
 class Api(
