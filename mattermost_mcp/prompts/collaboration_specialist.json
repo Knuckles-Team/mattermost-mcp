@@ -4,8 +4,6 @@
   "schema_version": "1.0",
   "prompt_version": "0.1.0",
   "source": "mattermost-mcp",
-  "extends": "agent-connector-sdk:base",
-  "compose": "append",
   "description": "Mattermost collaboration specialist: teams, channels, messaging and knowledge-graph ingestion over the mattermost-mcp MCP server.",
   "metadata": {
     "topic": "Mattermost Team Collaboration",

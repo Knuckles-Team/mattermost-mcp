@@ -56,12 +56,12 @@ def _records_by_id(request: Any) -> dict[str, Any]:
 
 
 def _node_type_of(record: Any) -> str:
-    # mapping_reference: "manifest:<connector>#schema_mappings/<node_type>"
+    # mapping_reference: "connector:<connector>#mappings/<node_type>"
     return record.mapping_reference.rsplit("/", 1)[-1]
 
 
 def _relationship_name_of(rel: Any) -> str:
-    # relation_reference: "manifest:<connector>#resources/<type>/relations/<name>"
+    # relation_reference: "connector:<connector>#relations/<type>/<name>"
     return rel.relation_reference.rsplit("/", 1)[-1]
 
 
