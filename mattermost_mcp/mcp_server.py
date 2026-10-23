@@ -16,7 +16,7 @@ from mattermost_mcp.api_client import Api
 from mattermost_mcp.auth import get_client
 from mattermost_mcp.mcp.mcp_kg import register_kg_tools
 
-__version__ = "2.4.4"
+__version__ = "2.4.5"
 logger = get_logger(name="mattermost_mcp")
 
 #: Typed inputs for every client method, generated from the Mattermost OpenAPI

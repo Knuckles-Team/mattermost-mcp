@@ -12,9 +12,8 @@
 # :MediaAsset / :Blob classes (never redefined here). Backs the mattermost-mcp MCP tool
 # surface (mattermost_mcp_teams / _channels / _users / _posts / _files).
 
-:Team a owl:Class ;
-    rdfs:label "Team" ;
-    rdfs:comment "A Mattermost team: a top-level workspace that owns channels and members (mattermost_mcp_teams)." .
+:Team a owl:Class .
+
 
 :Channel a owl:Class ;
     rdfs:label "Channel" ;
@@ -112,5 +111,4 @@
     rdfs:comment """Mattermost team-collaboration model — teams, channels, people and bots,
     plus messages (as shared :Document nodes) and their file attachments (as shared
     :MediaAsset blobs) with their membership, authorship and threading relationships —
-    federated into the agent-connector-sdk knowledge-graph hub.""" ;
-    owl:imports <http://knuckles.team/kg> .
+    federated into the agent-connector-sdk knowledge-graph hub.""" .
