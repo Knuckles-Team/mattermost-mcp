@@ -4,7 +4,9 @@ import importlib
 import inspect
 from typing import Any
 
-__version__ = "2.4.5"
+from agent_connector_sdk.connector_identity import connector_version
+
+__version__ = connector_version("mattermost_mcp")
 __all__: list[str] = []
 
 CORE_MODULES = ["mattermost_mcp.api_client"]
@@ -75,3 +77,19 @@ def __getattr__(name: str) -> Any:
 
 def __dir__() -> list[str]:
     return sorted(list(globals().keys()) + __all__)
+
+
+from agent_connector_sdk.connector import Connector
+from agent_connector_sdk.connector_hooks import RegistrationContext
+
+
+def _register_legacy_surface(context: RegistrationContext) -> None:
+    from mattermost_mcp.mcp_server import register_server_surface
+
+    register_server_surface(context.server)
+
+
+connector = Connector(
+    instructions="Mattermost MCP MCP Server - Managed dynamic operations.",
+    extra_registrations=(_register_legacy_surface,),
+)
