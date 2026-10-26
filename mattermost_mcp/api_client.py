@@ -1,6 +1,8 @@
 """CONCEPT:MM-OS.governance.mm Dynamic client facade orchestration and resource mappings."""
 
 # !/usr/bin/env python
+from agent_connector_sdk.connector_identity import connector_version
+
 from mattermost_mcp.api.api_client_access_control import Api as AccessControlApi
 from mattermost_mcp.api.api_client_actions import Api as ActionsApi
 from mattermost_mcp.api.api_client_agents import Api as AgentsApi
@@ -60,7 +62,7 @@ from mattermost_mcp.api.api_client_users import Api as UsersApi
 from mattermost_mcp.api.api_client_views import Api as ViewsApi
 from mattermost_mcp.api.api_client_webhooks import Api as WebhooksApi
 
-__version__ = "2.4.5"
+__version__ = connector_version("mattermost_mcp")
 
 
 class Api(

@@ -21,8 +21,10 @@
     {
       "id": "CONN-MATTERMOST-MCP-SDK-CENTRALIZATION-R002",
       "title": "SDK floor and dependency set",
-      "delivery_state": "SPECIFIED",
-      "landed_in": [],
+      "delivery_state": "VERIFIED",
+      "landed_in": [
+        "2ac457000a0c"
+      ],
       "verified_by": [
         "tests/test_sdk_centralization.py:58"
       ]

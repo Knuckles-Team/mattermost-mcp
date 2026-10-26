@@ -6,7 +6,8 @@ from pathlib import Path
 from typing import Any
 
 from agent_connector_sdk.config import load_config
-from agent_connector_sdk.mcp.server import create_mcp_server
+from agent_connector_sdk.connector import build_server
+from agent_connector_sdk.connector_identity import connector_version
 from agent_connector_sdk.mcp.tool_surface import register_tool_surface
 from fastmcp.utilities.logging import get_logger
 from starlette.requests import Request
@@ -16,7 +17,7 @@ from mattermost_mcp.api_client import Api
 from mattermost_mcp.auth import get_client
 from mattermost_mcp.mcp.mcp_kg import register_kg_tools
 
-__version__ = "2.4.5"
+__version__ = connector_version("mattermost_mcp")
 logger = get_logger(name="mattermost_mcp")
 
 #: Typed inputs for every client method, generated from the Mattermost OpenAPI
@@ -34,13 +35,14 @@ __all__ = [
 ]
 
 
-def get_mcp_instance() -> tuple[Any, ...]:
+def get_mcp_instance(*, command_args=None) -> tuple[Any, ...]:
     load_config()
-    args, mcp, middlewares = create_mcp_server(
-        name="Mattermost MCP MCP",
-        version=__version__,
-        instructions="Mattermost MCP MCP Server - Managed dynamic operations.",
-    )
+    args, mcp = build_server("mattermost_mcp", command_args=command_args)
+    return mcp, args, list(mcp.middleware)
+
+
+def register_server_surface(mcp) -> None:
+    """Reuse the existing custom health route and manifest-backed tools."""
 
     @mcp.custom_route("/health", methods=["GET"])
     async def health_check(request: Request) -> JSONResponse:
@@ -54,10 +56,6 @@ def get_mcp_instance() -> tuple[Any, ...]:
         tools_module=sys.modules[__name__],
         manifest=OPERATION_MANIFEST,
     )
-
-    for mw in middlewares:
-        mcp.add_middleware(mw)
-    return mcp, args, middlewares
 
 
 def mcp_server() -> None:
