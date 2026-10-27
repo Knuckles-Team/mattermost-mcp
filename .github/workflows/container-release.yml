@@ -28,9 +28,13 @@ jobs:
           mode: published-wheel
           distribution: mattermost-mcp
           module: mattermost_mcp
+          legacy-profile: true
   publish-docker:
     needs: verify-public-wheel
     uses: Knuckles-Team/pipelines/.github/workflows/container_pipeline.yml@main
+    with:
+      legacy_profile: true
+      render_connector: false
     permissions:
       contents: read
     secrets:
