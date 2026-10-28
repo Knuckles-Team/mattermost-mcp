@@ -4455,7 +4455,7 @@
   "name": "get_channel_member_counts_by_group",
   "http": "GET",
   "path": "/api/v4/channels/{channel_id}/member_counts_by_group",
-  "summary": "Channel members counts for each group that has atleast one member in the channel",
+  "summary": "Channel members counts for each group that has at least one member in the channel",
   "parameters": [
    {
     "name": "channel_id",
