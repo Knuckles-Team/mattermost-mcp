@@ -442,7 +442,7 @@ class Api(ApiClientBase):
         return self.request("GET", url, params=kwargs)
 
     def get_channel_member_counts_by_group(self, channel_id: str, **kwargs) -> Any:
-        """Channel members counts for each group that has atleast one member in the channel
+        """Channel members counts for each group that has at least one member in the channel
 
         Path: /api/v4/channels/{channel_id}/member_counts_by_group
         Method: GET
