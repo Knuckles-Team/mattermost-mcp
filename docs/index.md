@@ -1,6 +1,6 @@
 # mattermost-mcp
 
-Mattermost team-collaboration **API + MCP Server** for the agent-connector-sdk ecosystem
+Mattermost team-collaboration **API + MCP Server** for the scion-sdk ecosystem
 Server v4 REST API.
 
 !!! info "Official documentation"

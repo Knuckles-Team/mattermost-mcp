@@ -4,7 +4,7 @@ import importlib
 import inspect
 from typing import Any
 
-from agent_connector_sdk.connector_identity import connector_version
+from scion_sdk.connector_identity import connector_version
 
 __version__ = connector_version("mattermost_mcp")
 __all__: list[str] = []
@@ -79,8 +79,8 @@ def __dir__() -> list[str]:
     return sorted(list(globals().keys()) + __all__)
 
 
-from agent_connector_sdk.connector import Connector
-from agent_connector_sdk.connector_hooks import RegistrationContext
+from scion_sdk.connector import Connector
+from scion_sdk.connector_hooks import RegistrationContext
 
 
 def _register_legacy_surface(context: RegistrationContext) -> None:

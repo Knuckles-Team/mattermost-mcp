@@ -2,7 +2,7 @@
 
 CONCEPT:AU-KG.ingest.list-durable-media. Files uploaded to Mattermost posts are stored
 as content-addressed **blobs** with a ``:MediaAsset`` graph node (carrying the file-info
-metadata), via the ``agent_connector_sdk.ingest`` knowledge-ingest facade. This makes the
+metadata), via the ``scion_sdk.ingest`` knowledge-ingest facade. This makes the
 raw attachment bytes — not just a file id — durable, deduped and queryable inside the
 knowledge graph.
 
@@ -16,7 +16,7 @@ import hashlib
 import logging
 from typing import Any
 
-from agent_connector_sdk.ingest import (
+from scion_sdk.ingest import (
     ChangeSet,
     IngestBinding,
     IngestError,

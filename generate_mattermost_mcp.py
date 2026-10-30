@@ -132,7 +132,7 @@ for file in api_files:
 
                 method_def = f"""    def {func_name}(self, {sig_str}**kwargs) -> Any:
         \"\"\"{summary}
-        
+
         Path: {path}
         Method: {http_method.upper()}
         \"\"\"

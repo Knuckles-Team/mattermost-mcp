@@ -12,7 +12,7 @@ description: >-
 license: MIT
 tags: [mattermost, teams, channels, membership, administration, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Mattermost Team Administration

@@ -1,7 +1,7 @@
 """CONCEPT:MM-OS.governance.mm Dynamic client facade orchestration and resource mappings."""
 
 # !/usr/bin/env python
-from agent_connector_sdk.connector_identity import connector_version
+from scion_sdk.connector_identity import connector_version
 
 from mattermost_mcp.api.api_client_access_control import Api as AccessControlApi
 from mattermost_mcp.api.api_client_actions import Api as ActionsApi
