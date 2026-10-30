@@ -10,7 +10,7 @@ server; SOURCE_VERSION below records which one generated the committed files.
 One entry per OpenAPI operation, keyed by the generated client method name, with
 its path and query parameters and the top-level properties of a JSON object
 request body (sent as the body's own fields, matching the client's
-``data=kwargs``). agent-connector-sdk types each operation tool from it.
+``data=kwargs``). scion-sdk types each operation tool from it.
 """
 
 from __future__ import annotations
@@ -68,7 +68,7 @@ def python_name(name: str) -> str:
     """The keyword-argument name for a wire field.
 
     A Python keyword (``from``, ``in``...) cannot be a parameter name, so it is
-    declared as ``<name>_``. agent-connector-sdk (0.3.8+) gives that parameter a
+    declared as ``<name>_``. scion-sdk (0.3.8+) gives that parameter a
     pydantic field alias of the wire name, so the tool schema shows ``from``; the
     client's ``ApiClientBase.request`` restores ``from_`` to ``from`` before sending.
     """

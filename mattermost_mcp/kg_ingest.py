@@ -1,6 +1,6 @@
 """Native epistemic-graph ingestion for Mattermost records and messages.
 
-All writes go through the ``agent_connector_sdk.ingest`` knowledge-ingest facade.
+All writes go through the ``scion_sdk.ingest`` knowledge-ingest facade.
 Nodes use canonical ``node_type`` and edges use canonical ``relationship``; nodes
 and edges commit in one change set. Missing engine dependencies, rejected
 records, conflicts, and transaction failures propagate as ``IngestError``.
@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from agent_connector_sdk.ingest import (
+from scion_sdk.ingest import (
     ChangeSet,
     Document,
     Entity,

@@ -12,7 +12,7 @@ description: >-
 license: MIT
 tags: [mattermost, knowledge-graph, ingestion, kg, owl, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Mattermost Knowledge-Graph Ingestion

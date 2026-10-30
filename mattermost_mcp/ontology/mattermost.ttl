@@ -111,4 +111,4 @@
     rdfs:comment """Mattermost team-collaboration model — teams, channels, people and bots,
     plus messages (as shared :Document nodes) and their file attachments (as shared
     :MediaAsset blobs) with their membership, authorship and threading relationships —
-    federated into the agent-connector-sdk knowledge-graph hub.""" .
+    federated into the scion-sdk knowledge-graph hub.""" .
