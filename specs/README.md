@@ -8,8 +8,9 @@ This repository owns the specs with the ID prefix `CONN-MATTERMOST-MCP`. The con
 
 ## Add a spec
 
-Read the existing specs first. Extend the spec that owns the behavior. Create a spec only for a capability that no spec owns. Copy [`_template/`](_template/) to `specs/<area>/`, set the ID to `CONN-MATTERMOST-MCP` or `CONN-MATTERMOST-MCP-<AREA>`, and add one index line below.
+Read the existing specs first. Extend the spec that owns the behavior. Create a spec only for a capability that no spec owns. Copy the files of `.specify/templates/` to `specs/<area>/`, set the ID to `CONN-MATTERMOST-MCP` or `CONN-MATTERMOST-MCP-<AREA>`, and add one index line below.
 
 ## Local specifications
 
 - [`CONN-MATTERMOST-MCP-SDK-CENTRALIZATION`](sdk-centralization/spec.md) — Shared SDK capabilities in mattermost-mcp
+- [`CONN-MATTERMOST-MCP-CONNECTOR-CONTENT`](connector-content/spec.md) — The connector serves its packaged content.
