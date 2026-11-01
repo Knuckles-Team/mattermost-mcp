@@ -1,7 +1,9 @@
-# CONN-MATTERMOST-MCP-SDK-CENTRALIZATION tasks
+# CONN-MATTERMOST-MCP-SDK-CENTRALIZATION — Implementation tasks
 
-| Task | Deliverable | Proof |
-|---|---|---|
-| T01 | Requests use the governed SDK client | A unit test shows the API client holds an httpx client and a request carries the configured credential through a mock transport |
-| T02 | SDK floor and dependency set | pyproject.toml shows the floor and no unused requests pin |
-| T03 | Production wiring and hot path | A test builds the client with a mock transport, sees a 503 then a 200, and gets one result |
+Governing spec: [spec.md](spec.md). Design: [plan.md](plan.md). Rows: [requirements.md](requirements.md).
+
+Each task line reads `- [ ] T001 [P] [US1] <ID>-R012.4 description`. Tasks run producer first; a checked task has landed.
+
+- [ ] T001 [US1] CONN-MATTERMOST-MCP-SDK-CENTRALIZATION-R001 Requests use the governed SDK client.
+- [x] T002 [US2] CONN-MATTERMOST-MCP-SDK-CENTRALIZATION-R002 SDK floor and dependency set.
+- [ ] T003 [US3] CONN-MATTERMOST-MCP-SDK-CENTRALIZATION-R003 Production wiring and hot path.
