@@ -13103,8 +13103,8 @@
     }
    },
    {
-    "name": "action",
-    "python_name": "action",
+    "name": "rewrite_action",
+    "python_name": "rewrite_action",
     "in": "body",
     "required": true,
     "schema": {

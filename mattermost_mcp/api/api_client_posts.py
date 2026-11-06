@@ -259,11 +259,27 @@ class Api(ApiClientBase):
         url = f"/api/v4/posts/{post_id}/burn"
         return self.request("DELETE", url, params=kwargs)
 
-    def rewrite_message(self, **kwargs) -> Any:
+    def rewrite_message(
+        self,
+        agent_id: str,
+        message: str,
+        rewrite_action: str,
+        custom_prompt: str | None = None,
+    ) -> Any:
         """Rewrite a message using AI
+
+        ``rewrite_action`` is the rewrite the agent applies (the wire field is
+        ``action``; it is renamed so no tool carries a routing ``action`` input).
 
         Path: /api/v4/posts/rewrite
         Method: POST
         """
         url = "/api/v4/posts/rewrite"
-        return self.request("POST", url, data=kwargs)
+        body: dict[str, Any] = {
+            "agent_id": agent_id,
+            "message": message,
+            "action": rewrite_action,
+        }
+        if custom_prompt is not None:
+            body["custom_prompt"] = custom_prompt
+        return self.request("POST", url, data=body)

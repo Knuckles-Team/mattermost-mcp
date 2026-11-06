@@ -7,27 +7,24 @@ description: >-
 
 # Mattermost Mcp Operations
 
-Use the provider's governed MCP tools through Arbora delegation.
+Every step below is one typed tool call; there is no `action` or JSON-string argument. Resolve ids by name first, read before you change, and ask for approval before anything destructive.
 
-## Workflow
+## Verify connection
 
-1. Establish the verified GraphSession and tenant before discovery or retrieval.
-2. Discover the current condensed tool surface; never assume a stale tool name or schema.
-3. Prefer read-only inspection first. For changes, present impact and use the provider's
-   dry-run or preview mode when available.
-4. Execute mutations as fenced WorkItems so retries remain idempotent and auditable.
-5. Ingest source data only through the signed connector preset and ChangeEnvelope path.
-6. Verify the durable result and its trace/evidence before reporting completion.
+Confirm the server answers and the credential identifies the acting user.
 
-## Safety contract
+1. `mattermost_get_ping` (get_server_status, device_id, use_rest_semantics)
+2. `mattermost_get_user` (user_id)
 
-- Never persist credentials, endpoints, raw personal identifiers, hostnames, or local paths.
-- Resolve TLS trust and verification from environment/configuration; never hardcode bypasses.
-- Treat unknown ACL, tenant, schema, or tool-contract state as a hard failure.
-- Require explicit approval for destructive, externally visible, or irreversible actions.
-- Keep runtime traces policy-scoped and privacy-sanitized.
+## Guardrails
 
-## Specialized workflows
+- Never print tokens, passwords or webhook secrets.
+- Public or destructive actions need the requester's confirmation of the target and text.
+- Report ids (and refusal codes) for every call.
 
-Read [the workflow catalog](references/catalog.md) only when the request needs a
-provider-specific procedure, parameter map, script, or reference asset.
+## Finding the right tool
+
+The workflows are in mattermost-channel-messaging, mattermost-team-administration and mattermost-kg-ingestion. Every other
+Mattermost operation is listed with its summary in the area skills mattermost-api-posts-and-files, mattermost-api-channels,
+mattermost-api-teams-and-groups, mattermost-api-users-and-sessions, mattermost-api-compliance-governance and
+mattermost-api-system-and-integrations. The full list by REST area is in [the catalog](references/catalog.md).

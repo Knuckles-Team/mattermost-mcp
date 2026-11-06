@@ -171,6 +171,10 @@ def main() -> int:
                         }
                     )
                 params += body_parameters(operation, definitions, taken)
+                for param in params:
+                    # A body field named `action` would read as a routing input.
+                    if param["name"] == "action" and name == "rewrite_message":
+                        param["name"] = param["python_name"] = "rewrite_action"
                 entries[name] = {
                     "method": name,
                     "name": name,
