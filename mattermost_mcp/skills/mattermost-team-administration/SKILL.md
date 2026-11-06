@@ -4,7 +4,7 @@ skill_type: skill
 description: >-
   Administer Mattermost teams and channels via the mattermost-mcp MCP server —
   list/create teams, list/create/rename/archive channels, set channel privacy, and
-  manage team and channel membership with the domain-typed condensed tools. Use when
+  manage team and channel membership with its typed tools. Use when
   the agent must provision a channel, resolve a channel or team by name, add/remove
   members, or read team/channel stats. Do NOT use to read or post messages
   (mattermost-channel-messaging) or to ingest structure into the knowledge graph
@@ -15,79 +15,109 @@ metadata:
   author: Knuckles-Team
   version: '0.1.0'
 ---
+
 # Mattermost Team Administration
 
-Domain-typed access to Mattermost **teams**, **channels**, and their **membership**.
-Prefer these tools over raw HTTP — they carry the team/channel field conventions and
-return team/channel-shaped records.
+Every step below is one typed tool call; there is no `action` or JSON-string argument. Resolve ids by name first, read before you change, and ask for approval before anything destructive.
 
-## When to use
-- List or create teams; look a team up by name; read team stats and members.
-- List, create, rename, archive, or restore channels within a team.
-- Set channel privacy (public `O` ↔ private `P`).
-- Add or remove team / channel members.
+## Verify connection
 
-## When NOT to use
-- Read or post messages / threads / files → `mattermost-channel-messaging`.
-- Mirror teams/channels/users into the knowledge graph → `mattermost-kg-ingestion`.
-- Server-wide system/compliance/plugins config → use the corresponding condensed
-  tool (`mattermost_mcp_system`, `mattermost_mcp_compliance`, …) directly.
+Confirm the server answers and the credential identifies the acting user.
 
-## Prerequisites & environment
-Connect via the `mcp-client` skill against the **`mattermost-mcp`** MCP server.
+1. `mattermost_get_ping` (get_server_status, device_id, use_rest_semantics)
+2. `mattermost_get_user` (user_id)
 
-| Variable | Required | Notes |
-|----------|----------|-------|
-| `MATTERMOST_URL` | ✅ | Server base URL (alias `MATTERMOST_MCP_BASE_URL`) |
-| `MATTERMOST_TOKEN` | ✅* | Personal-access / bot token (needs admin scope for create/delete) |
-| `MATTERMOST_MCP_USERNAME` / `MATTERMOST_MCP_PASSWORD` | ✅* | Login fallback if no token |
-| `MATTERMOST_MCP_SSL_VERIFY` | optional | TLS verification toggle |
+## Find people
 
-*Provide either a token or username+password. `MCP_TOOL_MODE` selects the condensed
-vs. verbose surface.
+Resolve a person to a user id and see whether they are online.
 
-## Tools & actions
-Prefer the **condensed** tools; each takes `action` + a `params_json` **JSON string**.
+1. `mattermost_get_user_by_username` (username)
+2. `mattermost_get_user_by_email` (email)
+3. `mattermost_search_users` (term, team_id, not_in_team_id, in_channel_id, not_in_channel_id, in_group_id, group_constrained, allow_inactive, without_team, limit)
+4. `mattermost_get_users_by_usernames`
+5. `mattermost_get_user_status` (user_id)
 
-| Condensed tool | Key actions |
-|----------------|-------------|
-| `mattermost_mcp_teams` | `get_all_teams`, `create_team`, `get_team`, `get_team_by_name`, `get_team_members`, `add_team_member`, `remove_team_member`, `get_team_stats` |
-| `mattermost_mcp_channels` | `get_public_channels_for_team`, `create_channel`, `get_channel`, `get_channel_by_name`, `patch_channel`, `update_channel_privacy`, `delete_channel`, `restore_channel`, `add_channel_member`, `remove_user_from_channel`, `get_channel_members` |
+## Find channel
 
-### Key parameters
-- `team_id` — required for team reads and channel listing.
-- `channel_id` — required for channel reads/patches/membership.
-- `create_channel` body: `team_id`, `name` (URL slug), `display_name`, `type`
-  (`O` public / `P` private).
-- `create_team` body: `name`, `display_name`, `type` (`O` open / `I` invite-only).
+Resolve a channel by name or search and read its stats.
 
-## Recipes (`params_json`)
-List a team's public channels:
-```json
-{"team_id":"<team_id>","per_page":100}
-```
-Resolve a channel by name within a team:
-```json
-{"team_id":"<team_id>","channel_name":"deployments"}
-```
-Create a private channel:
-```json
-{"team_id":"<team_id>","name":"sec-incidents","display_name":"Sec Incidents","type":"P"}
-```
-Add a user to a channel:
-```json
-{"channel_id":"<channel_id>","user_id":"<user_id>"}
-```
+1. `mattermost_get_team_by_name` (team_name)
+2. `mattermost_get_channel_by_name_for_team_name` (team_name, channel_name, include_deleted)
+3. `mattermost_get_channel_by_name` (team_id, channel_name, include_deleted)
+4. `mattermost_search_channels` (team_id, term)
+5. `mattermost_get_channels_for_team_for_user` (user_id, team_id, include_deleted, last_delete_at)
+6. `mattermost_get_public_channels_for_team` (team_id, page, per_page)
+7. `mattermost_get_channel` (channel_id)
+8. `mattermost_get_channel_stats` (channel_id)
 
-## Gotchas
-- `params_json` is a **string** of JSON, not an object — serialize it.
-- `name` is the URL slug (lowercase, no spaces); `display_name` is the human label —
-  don't swap them.
-- `delete_channel` **archives** (soft-delete); use `restore_channel` to bring it back.
-- Channel `type` codes: `O`=public, `P`=private, `D`=direct, `G`=group; team `type`
-  codes: `O`=open, `I`=invite-only.
-- Create/delete require an admin-scoped token; a plain bot token may 403.
+## Create channel and invite
 
-## Related
-- `mattermost-channel-messaging` — read/post messages once a channel exists.
-- `mattermost-kg-ingestion` — mirror the team/channel/user graph into the KG.
+Create a channel, invite members and add a bookmark.
+
+1. `mattermost_get_team_by_name` (team_name)
+2. `mattermost_create_channel` (team_id, name, display_name, type, purpose, header, managed_category_name, default_category_name)
+3. `mattermost_add_channel_member` (channel_id, user_id, user_ids, post_root_id)
+4. `mattermost_get_channel_members` (channel_id, page, per_page)
+5. `mattermost_create_channel_bookmark` (channel_id, display_name, type, file_id, link_url, image_url, emoji)
+
+## Manage channel membership
+
+Review and change who is in a channel.
+
+1. `mattermost_get_channel_members` (channel_id, page, per_page)
+2. `mattermost_get_channel_member` (channel_id, user_id)
+3. `mattermost_add_channel_member` (channel_id, user_id, user_ids, post_root_id)
+4. `mattermost_remove_user_from_channel` (channel_id, user_id, confirm)
+
+## Set up team
+
+Create a team and bring people in.
+
+1. `mattermost_get_team_by_name` (team_name)
+2. `mattermost_create_team` (name, display_name, type)
+3. `mattermost_add_team_member` (team_id, user_id)
+4. `mattermost_invite_users_to_team` (team_id, graceful)
+5. `mattermost_get_team_members` (team_id, page, per_page, sort, exclude_deleted_users)
+6. `mattermost_get_team_stats` (team_id)
+
+## Manage bots and webhooks
+
+Create bots and incoming or outgoing webhooks, and switch them off.
+
+1. `mattermost_create_bot` (username, display_name, description)
+2. `mattermost_get_bots` (page, per_page, include_deleted, only_orphaned)
+3. `mattermost_patch_bot` (bot_user_id, username, display_name, description)
+4. `mattermost_disable_bot` (bot_user_id)
+5. `mattermost_enable_bot` (bot_user_id)
+6. `mattermost_create_incoming_webhook` (channel_id, user_id, display_name, description, username, icon_url, channel_locked)
+7. `mattermost_get_incoming_webhooks` (page, per_page, team_id, include_total_count)
+8. `mattermost_delete_incoming_webhook` (hook_id, confirm)
+9. `mattermost_create_outgoing_webhook` (team_id, display_name, trigger_words, callback_urls, channel_id, creator_id, description, trigger_when, content_type)
+10. `mattermost_get_outgoing_webhooks` (page, per_page, team_id, channel_id)
+
+## Manage user accounts
+
+Create, deactivate and re-role user accounts.
+
+1. `mattermost_get_user` (user_id)
+2. `mattermost_create_user` (email, username, t, iid, first_name, last_name, nickname, position, timezone, auth_data, auth_service, password, locale, props, notify_props)
+3. `mattermost_patch_user` (user_id, email, username, first_name, last_name, nickname, locale, position, timezone, props, notify_props)
+4. `mattermost_update_user_active` (user_id, active)
+5. `mattermost_update_user_roles` (user_id, roles)
+
+## Compliance and audit
+
+Create and download compliance reports and read the audit log.
+
+1. `mattermost_create_compliance_report`
+2. `mattermost_get_compliance_reports` (page, per_page)
+3. `mattermost_get_compliance_report` (report_id)
+4. `mattermost_download_compliance_report` (report_id)
+5. `mattermost_get_audits` (page, per_page)
+6. `mattermost_get_user_audits` (user_id)
+
+## Guardrails
+
+- Never print tokens, passwords or webhook secrets.
+- Public or destructive actions need the requester's confirmation of the target and text.
+- Report ids (and refusal codes) for every call.

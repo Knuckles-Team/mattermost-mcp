@@ -39,6 +39,11 @@ async def _listings():
         resources = {str(r.uri) for r in await client.list_resources()}
         prompts = {p.name for p in await client.list_prompts()}
         for uri in resources:
+            if uri.endswith("/contracts.ttl"):
+                # Rendered by the SDK from connector_contracts.py; no packaged file.
+                actual = await client.read_resource(uri)
+                assert actual[0].text.strip()
+                continue
             if uri.startswith(("ontology://", "shapes://")):
                 directory = ROOT / "ontology"
                 if uri.startswith("shapes://"):

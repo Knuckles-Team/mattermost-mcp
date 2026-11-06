@@ -4,7 +4,7 @@ skill_type: skill
 description: >-
   Read and post Mattermost messages via the mattermost-mcp MCP server — list a
   channel's posts and threads, search posts, create a post or a threaded reply,
-  and handle file attachments with the domain-typed condensed tools. Use when the
+  and handle file attachments with its typed tools. Use when the
   agent must read recent conversation in a channel, search for a message, post an
   update, or reply in a thread. Do NOT use to create/rename channels or manage
   membership (mattermost-team-administration) or to mirror conversations into the
@@ -15,84 +15,101 @@ metadata:
   author: Knuckles-Team
   version: '0.1.0'
 ---
+
 # Mattermost Channel Messaging
 
-Domain-typed access to Mattermost **posts** and **files** for reading and writing
-channel conversation. Prefer these tools over raw HTTP — they carry the post field
-conventions and return post-shaped records.
+Every step below is one typed tool call; there is no `action` or JSON-string argument. Resolve ids by name first, read before you change, and ask for approval before anything destructive.
 
-## When to use
-- Read the recent posts of a channel, or a full thread from a root post.
-- Search for a message across a team.
-- Create a post, or reply within a thread (`root_id`).
-- Read/attach files on a post.
+## Find people
 
-## When NOT to use
-- Create, rename, archive, or set channel privacy → `mattermost-team-administration`.
-- Add/remove channel or team members → `mattermost-team-administration`.
-- Push messages/channels into the knowledge graph → `mattermost-kg-ingestion`.
+Resolve a person to a user id and see whether they are online.
 
-## Prerequisites & environment
-Connect via the `mcp-client` skill against the **`mattermost-mcp`** MCP server.
+1. `mattermost_get_user_by_username` (username)
+2. `mattermost_get_user_by_email` (email)
+3. `mattermost_search_users` (term, team_id, not_in_team_id, in_channel_id, not_in_channel_id, in_group_id, group_constrained, allow_inactive, without_team, limit)
+4. `mattermost_get_users_by_usernames`
+5. `mattermost_get_user_status` (user_id)
 
-| Variable | Required | Notes |
-|----------|----------|-------|
-| `MATTERMOST_URL` | ✅ | Server base URL (alias `MATTERMOST_MCP_BASE_URL`) |
-| `MATTERMOST_TOKEN` | ✅* | Personal-access / bot token |
-| `MATTERMOST_MCP_USERNAME` / `MATTERMOST_MCP_PASSWORD` | ✅* | Login fallback if no token |
-| `MATTERMOST_MCP_SSL_VERIFY` | optional | TLS verification toggle |
+## Find channel
 
-*Provide either a token or username+password. `MCP_TOOL_MODE`
-(`condensed`|`verbose`|`both`) selects the condensed surface used below vs. the
-one-to-one verbose tools.
+Resolve a channel by name or search and read its stats.
 
-## Tools & actions
-Prefer the **condensed** tools; each takes `action` + a `params_json` **JSON string**
-whose keys are passed straight to the client method.
+1. `mattermost_get_team_by_name` (team_name)
+2. `mattermost_get_channel_by_name_for_team_name` (team_name, channel_name, include_deleted)
+3. `mattermost_get_channel_by_name` (team_id, channel_name, include_deleted)
+4. `mattermost_search_channels` (team_id, term)
+5. `mattermost_get_channels_for_team_for_user` (user_id, team_id, include_deleted, last_delete_at)
+6. `mattermost_get_public_channels_for_team` (team_id, page, per_page)
+7. `mattermost_get_channel` (channel_id)
+8. `mattermost_get_channel_stats` (channel_id)
 
-| Condensed tool | Key actions |
-|----------------|-------------|
-| `mattermost_mcp_posts` | `get_posts_for_channel`, `get_post`, `get_post_thread`, `create_post`, `search_posts`, `pin_post`, `get_file_infos_for_post` |
-| `mattermost_mcp_files` | `get_file`, `get_file_info`, `upload_file` |
+## Read channel conversation
 
-### Key parameters
-- `channel_id` — required for `get_posts_for_channel`.
-- `post_id` — required for `get_post` / `get_post_thread`.
-- `team_id` — required for `search_posts`.
-- `create_post` body: `channel_id`, `message`, optional `root_id` (thread reply),
-  optional `file_ids`.
+Read recent posts, a thread and the pinned posts of a channel.
 
-## Recipes (`params_json`)
-Read the latest posts in a channel:
-```json
-{"channel_id":"<channel_id>","per_page":30}
-```
-Fetch a full thread from a root post:
-```json
-{"post_id":"<root_post_id>"}
-```
-Post a new message:
-```json
-{"channel_id":"<channel_id>","message":"Deploy finished — all green ✅"}
-```
-Reply in a thread:
-```json
-{"channel_id":"<channel_id>","message":"On it.","root_id":"<root_post_id>"}
-```
-Search posts in a team:
-```json
-{"team_id":"<team_id>","terms":"incident postmortem"}
-```
+1. `mattermost_get_posts_for_channel` (channel_id, page, per_page, since, before, after, include_deleted, type)
+2. `mattermost_get_post` (post_id, include_deleted)
+3. `mattermost_get_post_thread` (post_id, perPage, fromPost, fromCreateAt, fromUpdateAt, direction, skipFetchThreads, collapsedThreads, collapsedThreadsExtended, updatesOnly)
+4. `mattermost_get_pinned_posts` (channel_id)
+5. `mattermost_get_posts_by_ids`
+6. `mattermost_get_file_infos_for_post` (post_id, include_deleted)
 
-## Gotchas
-- `params_json` is a **string** of JSON, not an object — serialize it.
-- `get_posts_for_channel` returns `{"order":[...],"posts":{id:post}}`, not a flat
-  list — iterate `order` to preserve chronology.
-- A threaded reply needs BOTH `channel_id` and `root_id`; omitting `root_id` posts
-  to the channel root, not the thread.
-- Ids are 26-char Mattermost ids; resolve a channel from its name first with
-  `mattermost_mcp_channels` action `get_channel_by_name`.
+## Search messages
 
-## Related
-- `mattermost-team-administration` — teams, channels, membership.
-- `mattermost-kg-ingestion` — mirror messages/structure into the knowledge graph.
+Search posts and files across a team or the whole server.
+
+1. `mattermost_search_posts` (team_id, terms, is_or_search, time_zone_offset, include_deleted_channels, page, per_page)
+2. `mattermost_search_posts_in_all_teams` (terms, is_or_search, time_zone_offset, include_deleted_channels, page, per_page)
+3. `mattermost_search_files` (terms, is_or_search, time_zone_offset, include_deleted_channels, page, per_page)
+4. `mattermost_search_team_files` (team_id, terms, is_or_search, time_zone_offset, include_deleted_channels, page, per_page)
+
+## Post message
+
+Post a message, with an attachment, into a channel.
+
+1. `mattermost_get_channel_by_name_for_team_name` (team_name, channel_name, include_deleted)
+2. `mattermost_upload_file` (channel_id, filename, files, client_ids)
+3. `mattermost_create_post` (channel_id, message, set_online, silent, root_id, file_ids, props, metadata)
+4. `mattermost_get_post` (post_id, include_deleted)
+
+## Reply in thread
+
+Read a thread and reply or react in it.
+
+1. `mattermost_get_post_thread` (post_id, perPage, fromPost, fromCreateAt, fromUpdateAt, direction, skipFetchThreads, collapsedThreads, collapsedThreadsExtended, updatesOnly)
+2. `mattermost_create_post` (channel_id, message, set_online, silent, root_id, file_ids, props, metadata)
+3. `mattermost_save_reaction` (user_id, post_id, emoji_name, create_at)
+4. `mattermost_get_reactions` (post_id)
+
+## Edit or retract message
+
+Correct, pin, unpin or delete a message.
+
+1. `mattermost_get_post` (post_id, include_deleted)
+2. `mattermost_update_post` (post_id, id, is_pinned, message, has_reactions, props)
+3. `mattermost_patch_post` (post_id, is_pinned, message, file_ids, has_reactions, props)
+4. `mattermost_pin_post` (post_id)
+5. `mattermost_unpin_post` (post_id)
+6. `mattermost_delete_post` (post_id, confirm)
+
+## Schedule message or reminder
+
+Schedule a post for later or set a reminder on one.
+
+1. `mattermost_create_scheduled_post` (scheduled_at, channel_id, message, root_id, file_ids, props, repeat_type, repeat_timezone)
+2. `mattermost_get_user_scheduled_posts` (includeDirectChannels)
+3. `mattermost_update_scheduled_post` (scheduled_post_id, id, channel_id, user_id, scheduled_at, message, repeat_type, repeat_timezone)
+4. `mattermost_delete_scheduled_post` (scheduled_post_id, confirm)
+5. `mattermost_set_post_reminder` (user_id, post_id, target_time)
+
+## Rewrite draft message
+
+Have the server's AI agent shorten or polish a draft before posting.
+
+1. `mattermost_rewrite_message` (agent_id, message, action, custom_prompt)
+
+## Guardrails
+
+- Never print tokens, passwords or webhook secrets.
+- Public or destructive actions need the requester's confirmation of the target and text.
+- Report ids (and refusal codes) for every call.
