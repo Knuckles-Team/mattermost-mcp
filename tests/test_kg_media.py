@@ -1,4 +1,4 @@
-"""Native epistemic-graph blob ingestion for Mattermost attachments — Wire-First coverage.
+"""Native medulla blob ingestion for Mattermost attachments — Wire-First coverage.
 
 Exercises ``ingest_file_attachment`` against a fake ingest transport (no engine
 required), asserting the stored blob + media-type derivation and strict input

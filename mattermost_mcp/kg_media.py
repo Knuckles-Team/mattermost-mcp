@@ -1,4 +1,4 @@
-"""Native epistemic-graph blob ingestion for Mattermost file attachments.
+"""Native medulla blob ingestion for Mattermost file attachments.
 
 CONCEPT:AU-KG.ingest.list-durable-media. Files uploaded to Mattermost posts are stored
 as content-addressed **blobs** with a ``:MediaAsset`` graph node (carrying the file-info

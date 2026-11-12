@@ -66,7 +66,7 @@ Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `mattermost-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `mattermost-mcp[mcp]` | Connector-focused MCP server (`scion-sdk` — FastMCP/FastAPI + `medulla[full]`) | The operator only run the **MCP server** (smallest install / image) |
 | `mattermost-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -85,7 +85,7 @@ One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
-| `example/mattermost-mcp:mcp` | `--target mcp` | `mattermost-mcp[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `mattermost-mcp` |
+| `example/mattermost-mcp:mcp` | `--target mcp` | `mattermost-mcp[mcp]` — **connector-focused**, includes `medulla[full]`; no model-orchestration stack | `mattermost-mcp` |
 
 ```bash
 docker build --target mcp   -t example/mattermost-mcp:mcp    docker/   # connector-focused MCP server
@@ -93,14 +93,14 @@ docker build --target mcp   -t example/mattermost-mcp:mcp    docker/   # connect
 
 agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
 
-### Knowledge-graph database (`epistemic-graph`)
+### Knowledge-graph database (`medulla`)
 
-Scion SDK core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
+Scion SDK core dependency (`medulla[full]`). The `[mcp]` extra keeps
 deployments can use the bundled engine. For production or shared state, run
-**epistemic-graph as a dedicated database service** and configure the runtime to use it.
+**medulla as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
 diagrams are documented in the
-[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+[medulla deployment guide](https://knuckles-team.github.io/medulla/deployment/).
 
 ---
 
@@ -356,7 +356,7 @@ The following declarative FastMCP tools are registered and available to upstream
 |----------|------|-------------|
 | `mattermost_ingest_channels` | intent | Ingest a team's channels as typed :Channel nodes (+ :inTeam links). |
 | `mattermost_ingest_posts` | intent | Ingest a channel's messages as :Document nodes (+ channel/author links). |
-| `mattermost_ingest_teams` | intent | Ingest Mattermost teams into epistemic-graph as typed :Team nodes. |
+| `mattermost_ingest_teams` | intent | Ingest Mattermost teams into medulla as typed :Team nodes. |
 | `mattermost_ingest_users` | intent | Ingest Mattermost users as shared :Person / :Bot nodes. |
 | `mattermost_mcp_access_control` | intent | Manage Mattermost MCP access_control operations. |
 | `mattermost_mcp_actions` | intent | Manage Mattermost MCP actions operations. |
@@ -421,7 +421,7 @@ See [docs/overview.md](docs/overview.md) or [docs/concepts.md](docs/concepts.md)
 
 ## Architecture
 
-This package uses the standardized Agent-Utilities dynamic facade architecture:
+This package uses the standardized Meristem dynamic facade architecture:
 
 ```mermaid
 graph TD
@@ -475,7 +475,7 @@ the detailed transport contract.
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `mattermost-mcp[mcp]` to add
 > FastMCP / FastAPI through `scion-sdk`; the required Scion SDK core
-> still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
+> still carries `medulla[full]`. The `[agent-runtime]` extra additionally
 > enables model orchestration.
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)

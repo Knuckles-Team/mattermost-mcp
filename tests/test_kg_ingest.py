@@ -1,4 +1,4 @@
-"""Native epistemic-graph typed-node + document ingestion — Wire-First coverage.
+"""Native medulla typed-node + document ingestion — Wire-First coverage.
 
 Exercises the real ``ingest_entities`` / ``ingest_documents`` seam and the Mattermost
 record mappers against a fake ingest transport (no engine required), asserting the
