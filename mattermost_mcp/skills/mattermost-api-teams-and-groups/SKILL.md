@@ -54,7 +54,7 @@ any delete, disable, revoke or reset.
 | `mattermost_get_team_stats` | Get a team stats |
 | `mattermost_get_teams_for_user` | Get a user's teams |
 | `mattermost_get_teams_usage` | Get current usage of teams |
-| `mattermost_ingest_teams` | Ingest Mattermost teams into epistemic-graph as typed :Team nodes. |
+| `mattermost_ingest_teams` | Ingest Mattermost teams into medulla as typed :Team nodes. |
 | `mattermost_invalidate_email_invites` | Invalidate active email invitations |
 | `mattermost_invite_guests_to_team` | Invite guests to the team by email |
 | `mattermost_invite_users_to_team` | Invite users to the team by email |

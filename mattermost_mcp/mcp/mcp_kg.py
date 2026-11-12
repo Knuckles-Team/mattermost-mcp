@@ -1,7 +1,7 @@
 """Native knowledge-graph ingestion MCP tools for mattermost-mcp (Wire-First).
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. These tools list Mattermost objects via
-the real client and push them into the ONE epistemic-graph engine as typed nodes / message
+the real client and push them into the ONE medulla engine as typed nodes / message
 documents (:mod:`mattermost_mcp.kg_ingest`) and file-attachment blobs
 (:mod:`mattermost_mcp.kg_media`). Best-effort: when no engine is reachable the ingest legs
 no-op and the tool returns ``{"ingested": None}``.
@@ -51,7 +51,7 @@ def register_kg_tools(mcp: FastMCP):
         client=Depends(get_client),
         ctx: Context | None = None,
     ) -> dict:
-        """Ingest Mattermost teams into epistemic-graph as typed :Team nodes."""
+        """Ingest Mattermost teams into medulla as typed :Team nodes."""
         from mattermost_mcp.kg_ingest import ingest_teams
 
         if ctx:

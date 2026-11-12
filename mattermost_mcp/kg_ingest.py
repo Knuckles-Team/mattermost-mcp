@@ -1,4 +1,4 @@
-"""Native epistemic-graph ingestion for Mattermost records and messages.
+"""Native medulla ingestion for Mattermost records and messages.
 
 All writes go through the ``scion_sdk.ingest`` knowledge-ingest facade.
 Nodes use canonical ``node_type`` and edges use canonical ``relationship``; nodes

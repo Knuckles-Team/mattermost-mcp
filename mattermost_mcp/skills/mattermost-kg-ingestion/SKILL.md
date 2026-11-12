@@ -2,7 +2,7 @@
 name: mattermost-kg-ingestion
 skill_type: skill
 description: >-
-  Natively ingest Mattermost into the epistemic-graph knowledge graph via the
+  Natively ingest Mattermost into the medulla knowledge graph via the
   mattermost-mcp MCP server — push teams, channels and users as typed
   :Team/:Channel/:Person nodes, messages as :Document nodes, and file attachments
   as :MediaAsset blobs, in one ACID path. Use when the agent must make a Mattermost

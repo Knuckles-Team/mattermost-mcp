@@ -1,10 +1,10 @@
 # Mattermost Kg Ingestion
 
-Natively ingest Mattermost into the epistemic-graph knowledge graph via the mattermost-mcp MCP server — push teams, channels and users as typed :Team/:Channel/:Person nodes, messages as :Document nodes, and file attachments as :MediaAsset blobs, in one ACID path. Use when the agent must make a Mattermost workspace searchable/queryable in the KG, or refresh its mirror. Do NOT use to read or post messages (mattermost-channel-messaging) or to provision teams and channels (mattermost-team-administration); prefer those.
+Natively ingest Mattermost into the medulla knowledge graph via the mattermost-mcp MCP server — push teams, channels and users as typed :Team/:Channel/:Person nodes, messages as :Document nodes, and file attachments as :MediaAsset blobs, in one ACID path. Use when the agent must make a Mattermost workspace searchable/queryable in the KG, or refresh its mirror. Do NOT use to read or post messages (mattermost-channel-messaging) or to provision teams and channels (mattermost-team-administration); prefer those.
 
 # Mattermost Knowledge-Graph Ingestion
 
-Push Mattermost structure and conversation into the ONE epistemic-graph engine as
+Push Mattermost structure and conversation into the ONE medulla engine as
 typed OWL nodes, message documents, and attachment blobs. Backed by
 `mattermost_mcp.kg_ingest` / `kg_media` and federated by `mattermost_mcp.ontology`
 (`[configured-endpoint]`).
@@ -22,7 +22,7 @@ typed OWL nodes, message documents, and attachment blobs. Backed by
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`mattermost-mcp`** MCP server, plus a
-reachable epistemic-graph engine (else the ingest legs no-op and return
+reachable medulla engine (else the ingest legs no-op and return
 `{"ingested": null}` — safe, but nothing is written).
 
 | Variable | Required | Notes |
