@@ -13,9 +13,6 @@
 # :MediaAsset / :Blob classes (never redefined here). Backs the mattermost-mcp MCP tool
 # surface (mattermost_mcp_teams / _channels / _users / _posts / _files).
 
-:Team a owl:Class ;
-    rdfs:subClassOf core:Team .
-
 
 :Channel a owl:Class ;
     rdfs:subClassOf core:MessageChannel ;
@@ -36,7 +33,7 @@
     rdfs:label "in team" ;
     rdfs:comment "Links a Channel to the Team that owns it." ;
     rdfs:domain :Channel ;
-    rdfs:range :Team .
+    rdfs:range core:Team .
 
 :postedInChannel a owl:ObjectProperty ;
     rdfs:label "posted in channel" ;
@@ -47,12 +44,6 @@
     rdfs:label "authored by" ;
     rdfs:comment "Links a message (:Document) to the Person or Bot who wrote it." ;
     rdfs:range core:Person .
-
-:memberOfTeam a owl:ObjectProperty ;
-    rdfs:label "member of team" ;
-    rdfs:comment "Links a Person to a Team they belong to." ;
-    rdfs:domain core:Person ;
-    rdfs:range :Team .
 
 :memberOfChannel a owl:ObjectProperty ;
     rdfs:label "member of channel" ;
@@ -80,7 +71,7 @@
 :teamType a owl:DatatypeProperty ;
     rdfs:label "team type" ;
     rdfs:comment "Mattermost team type code: O (open) or I (invite-only)." ;
-    rdfs:domain :Team ;
+    rdfs:domain core:Team ;
     rdfs:range xsd:string .
 
 :displayName a owl:DatatypeProperty ;
