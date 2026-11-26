@@ -13,6 +13,22 @@ metadata:
 
 Teams, team members and invites, user groups and their syncables, LDAP group links.
 
+## Steps
+
+1. Resolve the team with `mattermost_get_team_by_name`(team_name) and verify the returned team_id and display name match the request.
+2. Read the membership with `mattermost_get_team_members`(team_id, page, per_page) and verify whether the target user is already a member.
+3. Add the person with `mattermost_add_team_member`(team_id, user_id) after approval, and verify the response echoes both ids.
+4. Review user groups with `mattermost_get_groups_by_team`(team_id) and verify the group the person belongs in is listed.
+5. Read the team statistics with `mattermost_get_team_stats`(team_id) and verify the member count increased by one.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Request answers 401 or 403 | The credential is missing, expired or lacks the permission for this area | Confirm the acting identity with `mattermost_get_user`, then supply a token whose role covers the call and send it again with the corrected credential |
+| `mattermost_get_team_by_name` returns 404 | The team name is not the URL name of the team | List candidates with `mattermost_get_teams_for_user`(user_id) and use the name it returns |
+| `mattermost_add_team_member` is refused | The user is already a member or the team is closed to invites | Check `mattermost_get_team_member`(team_id, user_id), and use `mattermost_invite_users_to_team`(team_id) for a closed team |
+
 Every operation is its own typed tool; arguments follow the upstream API (path parameters are required,
 filters are optional arguments). Read first (get, list, search), change second, and obtain approval before
 any delete, disable, revoke or reset.

@@ -22,6 +22,22 @@ agent entry points. Shared connector contracts and transports belong to
 their owning repositories. Read `AGENTS.md` before changing code and keep
 provider credentials and endpoints out of source, logs, and skill content.
 
+## Steps
+
+1. Find the owning spec row with `git grep -n "<term>" -- specs` and verify a requirement row exists before any code changes.
+2. Create the environment with `uv sync --locked` and verify the command exits with status 0.
+3. Make the change in the connector only, reusing the existing SDK clients, and verify with `git diff --stat` that only intended paths changed.
+4. Run the focused tests with `uv run --all-extras pytest tests/test_mcp_server.py -q` and verify they pass.
+5. Run the repository gate with `uvx pre-commit run --all-files` and verify every hook reports Passed.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| A pre-commit hook fails | The change violates a shared connector-standard, secrets, spec or tests-fast check | Read the hook output, fix the reported file, stage the exact path with `git add -- <path>` and commit again without bypassing hooks |
+| `uv sync --locked` fails | uv.lock is out of date with pyproject.toml | Run `uv lock` to refresh the lockfile and commit both files together |
+| No spec row matches the change | The requirement is not yet written down | Extend the nearest row in `specs/` first, then cite its id in the `Spec:` trailer |
+
 ## Rapid delivery: the 5-minute contract
 
 Specs are already designed. Deliver small, reviewable slices and cite the
