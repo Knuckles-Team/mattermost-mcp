@@ -13,6 +13,22 @@ metadata:
 
 Channel records, members, moderation, views, categories and sidebar, shared channels and direct and group messages.
 
+## Steps
+
+1. Locate the channel with `mattermost_get_channel`(channel_id) and verify the returned name and team match the request.
+2. Read its membership with `mattermost_get_channel_members`(channel_id, page, per_page) and verify the target user is or is not listed.
+3. Check the moderation settings with `mattermost_get_channel_moderations`(channel_id) before changing permissions and verify the current values are recorded.
+4. Apply the change with `mattermost_add_channel_member`(channel_id, user_id) after the requester approved it, and verify the response echoes the user and channel ids.
+5. Read the channel back with `mattermost_get_channel_members`(channel_id) and verify the membership now matches the intended state.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Request answers 401 or 403 | The credential is missing, expired or lacks the permission for this area | Confirm the acting identity with `mattermost_get_user`, then supply a token whose role covers the call and send it again with the corrected credential |
+| A channel call returns 404 | The channel id is wrong or the channel is archived | Resolve the id with `mattermost_get_channel_by_name`(team_id, channel_name, include_deleted=true) and use the id it returns |
+| `mattermost_delete_channel` is refused | The destructive call was sent without approval or confirm=true | Ask the requester to approve the channel id, then call `mattermost_delete_channel`(channel_id, confirm=true) |
+
 Every operation is its own typed tool; arguments follow the upstream API (path parameters are required,
 filters are optional arguments). Read first (get, list, search), change second, and obtain approval before
 any delete, disable, revoke or reset.

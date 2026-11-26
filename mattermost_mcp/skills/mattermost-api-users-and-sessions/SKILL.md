@@ -13,6 +13,22 @@ metadata:
 
 User records, access tokens, sessions, preferences, status, bots, roles, authentication and multi-factor settings.
 
+## Steps
+
+1. Resolve the user with `mattermost_get_user_by_username`(username) and verify the returned user_id and email match the request.
+2. Check availability with `mattermost_get_user_status`(user_id) and verify the status field is present.
+3. Review sign-ins with `mattermost_get_sessions`(user_id) and verify the session ids and last activity times returned.
+4. Change the account with `mattermost_update_user_active`(user_id, active) or `mattermost_revoke_session`(user_id, session_id) after approval, and verify the response reports success.
+5. Read the user back with `mattermost_get_user`(user_id) and verify the active flag or session list reflects the change.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Request answers 401 or 403 | The credential is missing, expired or lacks the permission for this area | Confirm the acting identity with `mattermost_get_user`, then supply a token whose role covers the call and send it again with the corrected credential |
+| `mattermost_get_user_by_username` returns 404 | The username is misspelled or the user is deactivated | Search with `mattermost_get_user_by_email`(email) or `mattermost_get_users`(page, per_page) and use the id it returns |
+| A revoke or role change is refused | The destructive call was sent without approval | Obtain the requester's approval of the user id and session id, then send the call again with confirm=true where the tool takes it |
+
 Every operation is its own typed tool; arguments follow the upstream API (path parameters are required,
 filters are optional arguments). Read first (get, list, search), change second, and obtain approval before
 any delete, disable, revoke or reset.

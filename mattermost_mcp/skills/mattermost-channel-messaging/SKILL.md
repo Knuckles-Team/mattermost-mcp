@@ -2,13 +2,7 @@
 name: mattermost-channel-messaging
 skill_type: skill
 description: >-
-  Read and post Mattermost messages via the mattermost-mcp MCP server — list a
-  channel's posts and threads, search posts, create a post or a threaded reply,
-  and handle file attachments with its typed tools. Use when the
-  agent must read recent conversation in a channel, search for a message, post an
-  update, or reply in a thread. Do NOT use to create/rename channels or manage
-  membership (mattermost-team-administration) or to mirror conversations into the
-  knowledge graph (mattermost-kg-ingestion); prefer those.
+  Read and post Mattermost messages via the mattermost-mcp MCP server — list a channel's posts and threads, search posts, create a post or a threaded reply, and handle file attachments with its typed tools. Use when the agent must read recent conversation in a channel, search for a message, post an update, or reply in a thread.
 license: MIT
 tags: [mattermost, messaging, posts, channels, chatops, mcp]
 metadata:
@@ -18,7 +12,25 @@ metadata:
 
 # Mattermost Channel Messaging
 
+Scope: Read and post Mattermost messages via the mattermost-mcp MCP server — list a channel's posts and threads, search posts, create a post or a threaded reply, and handle file attachments with its typed tools. Use when the agent must read recent conversation in a channel, search for a message, post an update, or reply in a thread. Do NOT use to create/rename channels or manage membership (mattermost-team-administration) or to mirror conversations into the knowledge graph (mattermost-kg-ingestion); prefer those.
+
 Every step below is one typed tool call; there is no `action` or JSON-string argument. Resolve ids by name first, read before you change, and ask for approval before anything destructive.
+
+## Steps
+
+1. Confirm the server answers with `mattermost_get_ping`(get_server_status) and verify the response reports status OK.
+2. Resolve the channel with `mattermost_get_channel_by_name_for_team_name`(team_name, channel_name) and verify the returned channel_id matches the requested channel.
+3. Read the current conversation with `mattermost_get_posts_for_channel`(channel_id, per_page) and verify the posts returned are the ones the request refers to.
+4. Post the update with `mattermost_create_post`(channel_id, message, root_id) after the requester confirmed the text, and verify the response carries a new post id.
+5. Re-read the result with `mattermost_get_post`(post_id) and verify the stored message equals the text that was approved.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Request answers 401 or 403 | The credential is missing, expired or lacks the permission for this area | Confirm the acting identity with `mattermost_get_user`, then supply a token whose role covers the call and send it again with the corrected credential |
+| `mattermost_get_channel_by_name_for_team_name` returns 404 | The team name or channel name is misspelled, or the channel is archived | Look it up with `mattermost_search_channels`(team_id, term), or pass include_deleted=true to find an archived channel |
+| `mattermost_delete_post` is refused | The destructive call was sent without confirm=true | Ask the requester to approve the post id, then call `mattermost_delete_post`(post_id, confirm=true) |
 
 ## Find people
 

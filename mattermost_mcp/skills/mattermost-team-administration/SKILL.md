@@ -2,13 +2,7 @@
 name: mattermost-team-administration
 skill_type: skill
 description: >-
-  Administer Mattermost teams and channels via the mattermost-mcp MCP server —
-  list/create teams, list/create/rename/archive channels, set channel privacy, and
-  manage team and channel membership with its typed tools. Use when
-  the agent must provision a channel, resolve a channel or team by name, add/remove
-  members, or read team/channel stats. Do NOT use to read or post messages
-  (mattermost-channel-messaging) or to ingest structure into the knowledge graph
-  (mattermost-kg-ingestion); prefer those.
+  Administer Mattermost teams and channels via the mattermost-mcp MCP server — list/create teams, list/create/rename/archive channels, set channel privacy, and manage team and channel membership with its typed tools. Use when the agent must provision a channel, resolve a channel or team by name, add/remove members, or read team/channel stats.
 license: MIT
 tags: [mattermost, teams, channels, membership, administration, mcp]
 metadata:
@@ -18,7 +12,25 @@ metadata:
 
 # Mattermost Team Administration
 
+Scope: Administer Mattermost teams and channels via the mattermost-mcp MCP server — list/create teams, list/create/rename/archive channels, set channel privacy, and manage team and channel membership with its typed tools. Use when the agent must provision a channel, resolve a channel or team by name, add/remove members, or read team/channel stats. Do NOT use to read or post messages (mattermost-channel-messaging) or to ingest structure into the knowledge graph (mattermost-kg-ingestion); prefer those.
+
 Every step below is one typed tool call; there is no `action` or JSON-string argument. Resolve ids by name first, read before you change, and ask for approval before anything destructive.
+
+## Steps
+
+1. Confirm the server answers with `mattermost_get_ping`(get_server_status) and verify the response reports status OK.
+2. Resolve the team with `mattermost_get_team_by_name`(team_name) and verify the returned team_id belongs to the intended team.
+3. Create the channel with `mattermost_create_channel`(team_id, name, display_name, type) and verify the response carries a channel_id and the requested type.
+4. Add the members with `mattermost_add_channel_member`(channel_id, user_ids) and verify each user appears in `mattermost_get_channel_members`(channel_id).
+5. Check the final state with `mattermost_get_channel_stats`(channel_id) and verify the member count matches the intended membership.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Request answers 401 or 403 | The credential is missing, expired or lacks the permission for this area | Confirm the acting identity with `mattermost_get_user`, then supply a token whose role covers the call and send it again with the corrected credential |
+| `mattermost_create_channel` returns a name conflict | A channel with that name already exists in the team | Find it with `mattermost_get_channel_by_name`(team_id, channel_name, include_deleted=true) and reuse its channel_id, or choose another name |
+| `mattermost_remove_user_from_channel` is refused | The destructive call was sent without confirm=true | Obtain the requester's approval for the user and channel, then call `mattermost_remove_user_from_channel`(channel_id, user_id, confirm=true) |
 
 ## Verify connection
 

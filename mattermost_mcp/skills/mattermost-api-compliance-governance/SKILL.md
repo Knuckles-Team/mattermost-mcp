@@ -13,6 +13,22 @@ metadata:
 
 Compliance reports, data retention, attribute-based access control policies, content flagging review, audit logs and legal holds.
 
+## Steps
+
+1. List what exists with `mattermost_get_data_retention_policies`(page, per_page) and verify the policy ids and names returned.
+2. Inspect one policy with `mattermost_get_data_retention_policy`(policy_id) and verify its duration and scope match the request.
+3. Review recent activity with `mattermost_get_audits`(page, per_page) and verify the entries cover the period in question.
+4. Request evidence with `mattermost_create_compliance_report`(desc, type, start_at, end_at) after approval, and verify the response carries a report id.
+5. Poll the report with `mattermost_get_compliance_report`(report_id) and verify its status is finished before reporting it.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Request answers 401 or 403 | The credential is missing, expired or lacks the permission for this area | Confirm the acting identity with `mattermost_get_user`, then supply a token whose role covers the call and send it again with the corrected credential |
+| The report never reaches finished | The date range is empty or the job failed | Read `mattermost_get_compliance_reports`(page, per_page) for its status and create a new report with a corrected start_at and end_at |
+| `mattermost_delete_data_retention_policy` is refused | The destructive call was sent without approval or confirm=true | Obtain the requester's approval of the policy id and call `mattermost_delete_data_retention_policy`(policy_id, confirm=true) |
+
 Every operation is its own typed tool; arguments follow the upstream API (path parameters are required,
 filters are optional arguments). Read first (get, list, search), change second, and obtain approval before
 any delete, disable, revoke or reset.

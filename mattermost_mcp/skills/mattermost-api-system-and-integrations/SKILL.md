@@ -13,6 +13,22 @@ metadata:
 
 Server configuration, plugins, jobs, cluster, licence, LDAP and SAML, commands, webhooks, remote clusters, logs and diagnostics.
 
+## Steps
+
+1. Confirm the server answers with `mattermost_get_ping`(get_server_status) and verify the response reports status OK.
+2. Read the current configuration with `mattermost_get_config` and verify the setting under review has the value you expect, without printing secrets.
+3. Check background work with `mattermost_get_jobs`(page, per_page) and verify no job of the affected type is still running.
+4. Create the integration with `mattermost_create_incoming_webhook`(channel_id, user_id, display_name) after approval, and verify the response carries a hook id.
+5. List the webhooks with `mattermost_get_incoming_webhooks`(page, per_page, team_id) and verify the new hook appears once.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Request answers 401 or 403 | The credential is missing, expired or lacks the permission for this area | Confirm the acting identity with `mattermost_get_user`, then supply a token whose role covers the call and send it again with the corrected credential |
+| `mattermost_get_config` is refused | The account lacks system administrator permission | Use a token for a system administrator account, confirmed with `mattermost_get_user`(user_id) |
+| `mattermost_delete_incoming_webhook` is refused | The destructive call was sent without approval or confirm=true | Obtain approval for the hook id and call `mattermost_delete_incoming_webhook`(hook_id, confirm=true) |
+
 Every operation is its own typed tool; arguments follow the upstream API (path parameters are required,
 filters are optional arguments). Read first (get, list, search), change second, and obtain approval before
 any delete, disable, revoke or reset.

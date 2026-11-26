@@ -13,6 +13,22 @@ metadata:
 
 Everything about messages beyond the basic post, read and search workflows: reactions, drafts, acknowledgements, edit history, file transfer, bookmarks, emoji and recaps.
 
+## Steps
+
+1. Read the post with `mattermost_get_post`(post_id) and verify the channel and author match the request.
+2. List its files with `mattermost_get_file_infos_for_post`(post_id) and verify the file ids and names returned.
+3. Fetch file details with `mattermost_get_file_info`(file_id) and verify the size and mime type are what was expected.
+4. Upload a new file with `mattermost_upload_file`(channel_id, filename, files) after approval and verify the response carries the new file id.
+5. Read the post back with `mattermost_get_post`(post_id) and verify the change is visible.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| Request answers 401 or 403 | The credential is missing, expired or lacks the permission for this area | Confirm the acting identity with `mattermost_get_user`, then supply a token whose role covers the call and send it again with the corrected credential |
+| `mattermost_get_file_info` returns 404 | The file id is wrong or the file was deleted with its post | Take the file id from `mattermost_get_file_infos_for_post`(post_id) of the post that owns it |
+| `mattermost_delete_post` is refused | The destructive call was sent without approval or confirm=true | Ask the requester to approve the post id, then call `mattermost_delete_post`(post_id, confirm=true) |
+
 Every operation is its own typed tool; arguments follow the upstream API (path parameters are required,
 filters are optional arguments). Read first (get, list, search), change second, and obtain approval before
 any delete, disable, revoke or reset.
